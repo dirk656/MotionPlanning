@@ -10,10 +10,13 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 DATA_DIR = os.path.join(_PROJECT_ROOT, "data", "env")
-URDF_PATH = os.path.join(_PROJECT_ROOT, "src", "config", "franka_panda_gem.urdf")
+URDF_PATH = os.path.join(_PROJECT_ROOT, "src", "robots", "franka_panda_gem.urdf")
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-from planning_utils.urdf_to_python import parse_urdf, compute_fk
+from robot_utils.urdf_to_geometry import parse_urdf
+from robot_utils.fk_solver import compute_fk
+from robot_utils.rotation_matrix import rotation_matrix_axis_angle, rpy_to_rotation, make_transform
+
 
 
 # ───────── 绘图函数 ─────────
