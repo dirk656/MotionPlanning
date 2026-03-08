@@ -8,7 +8,8 @@ config_path = "/config/env.yaml"
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from planning_utils.collision_check_utils import points_in_AABB_3d, points_in_ball_3d, points_in_cylinder_3d, points_in_robot_arm_3d
-from planning_utils.urdf_to_python import parse_urdf, compute_fk, get_robot_collision_bodies
+from robot_utils.urdf_to_geometry import parse_urdf, get_robot_collision_bodies
+from robot_utils.fk_solver import compute_fk
 
 
 def check_point_in_obstacles(point, obstacles, clearance=0.0):
@@ -61,11 +62,14 @@ def generate_scene(scene_id, config, robot_collision_bodies=None):
     min_start_goal_distance = col_cfg.get('min_start_goal_distance', 2.0)
     max_start_goal_attempt = col_cfg.get('max_start_goal_attempt', 200)
     robot_clearance = col_cfg.get('robot_clearance', 0.1)
+    boundary_margin = col_cfg.get('boundary_margin', 0.05)
+    sg_min = min_bounds + boundary_margin  # 起终点采样的收缩边界
+    sg_max = max_bounds - boundary_margin
 
     # 先生成起终点，确保距离大于 min_start_goal_distance 且不在机械臂内
     for _ in range(max_start_goal_attempt):
-        start_pos = np.random.uniform(min_bounds, max_bounds)
-        goal_pos = np.random.uniform(min_bounds, max_bounds)
+        start_pos = np.random.uniform(sg_min, sg_max)
+        goal_pos = np.random.uniform(sg_min, sg_max)
         if np.sum((start_pos - goal_pos) ** 2) <= min_start_goal_distance ** 2:
             continue
         if robot_collision_bodies:
@@ -151,7 +155,7 @@ def generate_scene(scene_id, config, robot_collision_bodies=None):
         in_arm = points_in_robot_arm_3d(tuple(start_pos.tolist()), robot_collision_bodies, clearance=robot_clearance) if robot_collision_bodies else False
         if not in_obs and not in_arm:
             break
-        start_pos = np.random.uniform(min_bounds, max_bounds)
+        start_pos = np.random.uniform(sg_min, sg_max)
     else:
         print(f"警告: 场景 {scene_id} 起点重采样 {max_resample} 次仍在障碍物/机械臂内")
 
@@ -160,7 +164,7 @@ def generate_scene(scene_id, config, robot_collision_bodies=None):
         in_arm = points_in_robot_arm_3d(tuple(goal_pos.tolist()), robot_collision_bodies, clearance=robot_clearance) if robot_collision_bodies else False
         if not in_obs and not in_arm:
             break
-        goal_pos = np.random.uniform(min_bounds, max_bounds)
+        goal_pos = np.random.uniform(sg_min, sg_max)
     else:
         print(f"警告: 场景 {scene_id} 终点重采样 {max_resample} 次仍在障碍物/机械臂内")
 

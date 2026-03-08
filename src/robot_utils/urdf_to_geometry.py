@@ -6,40 +6,7 @@ URDF 解析与正运动学计算工具。
 import xml.etree.ElementTree as ET
 import numpy as np
 
-
-def rotation_matrix_axis_angle(axis, angle):
-    """绕任意轴的旋转矩阵（Rodrigues 公式）"""
-    axis = np.array(axis, dtype=float)
-    axis = axis / (np.linalg.norm(axis) + 1e-12)
-    K = np.array([
-        [0, -axis[2], axis[1]],
-        [axis[2], 0, -axis[0]],
-        [-axis[1], axis[0], 0],
-    ])
-    return np.eye(3) + np.sin(angle) * K + (1 - np.cos(angle)) * K @ K
-
-
-def rpy_to_rotation(rpy):
-    """RPY (roll, pitch, yaw) → 旋转矩阵 R = Rz(yaw) @ Ry(pitch) @ Rx(roll)"""
-    r, p, y = rpy
-    Rx = rotation_matrix_axis_angle([1, 0, 0], r)
-    Ry = rotation_matrix_axis_angle([0, 1, 0], p)
-    Rz = rotation_matrix_axis_angle([0, 0, 1], y)
-    return Rz @ Ry @ Rx
-
-
-def make_transform(xyz, rpy):
-    """构造 4x4 齐次变换矩阵"""
-    T = np.eye(4)
-    T[:3, :3] = rpy_to_rotation(rpy)
-    T[:3, 3] = xyz
-    return T
-
-
-def _parse_vec(s, default=(0, 0, 0)):
-    if s is None:
-        return np.array(default, dtype=float)
-    return np.array([float(x) for x in s.split()], dtype=float)
+from robot_utils.rotation_matrix import * 
 
 
 def parse_urdf(urdf_path):
@@ -59,8 +26,8 @@ def parse_urdf(urdf_path):
         visuals = []
         for vis in link_elem.findall('visual'):
             origin = vis.find('origin')
-            xyz = _parse_vec(origin.get('xyz') if origin is not None else None)
-            rpy = _parse_vec(origin.get('rpy') if origin is not None else None)
+            xyz = parse_vec(origin.get('xyz') if origin is not None else None)
+            rpy = parse_vec(origin.get('rpy') if origin is not None else None)
             geom = vis.find('geometry')
             geom_info = {}
             for child in geom:
@@ -71,8 +38,8 @@ def parse_urdf(urdf_path):
         collisions = []
         for col in link_elem.findall('collision'):
             origin = col.find('origin')
-            xyz = _parse_vec(origin.get('xyz') if origin is not None else None)
-            rpy = _parse_vec(origin.get('rpy') if origin is not None else None)
+            xyz = parse_vec(origin.get('xyz') if origin is not None else None)
+            rpy = parse_vec(origin.get('rpy') if origin is not None else None)
             geom = col.find('geometry')
             geom_info = {}
             for child in geom:
@@ -89,10 +56,10 @@ def parse_urdf(urdf_path):
         parent = joint_elem.find('parent').get('link')
         child = joint_elem.find('child').get('link')
         origin = joint_elem.find('origin')
-        xyz = _parse_vec(origin.get('xyz') if origin is not None else None)
-        rpy = _parse_vec(origin.get('rpy') if origin is not None else None)
+        xyz = parse_vec(origin.get('xyz') if origin is not None else None)
+        rpy = parse_vec(origin.get('rpy') if origin is not None else None)
         axis_elem = joint_elem.find('axis')
-        axis = _parse_vec(axis_elem.get('xyz') if axis_elem is not None else None, (0, 0, 1))
+        axis = parse_vec(axis_elem.get('xyz') if axis_elem is not None else None, (0, 0, 1))
         joints.append({
             'name': name, 'type': jtype,
             'parent': parent, 'child': child,
