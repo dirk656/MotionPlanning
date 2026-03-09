@@ -13,7 +13,7 @@ from robot_utils.fk_solver import compute_fk
 
 
 def check_point_in_obstacles(point, obstacles, clearance=0.0):
-    """使用 collision_check_utils 检查单个 3D 点是否在任意障碍物内（含安全间距）"""
+    
     point_tuple = tuple(point.tolist())
     boxes, spheres, cylinders = [], [], []
     for obs in obstacles:
@@ -43,7 +43,7 @@ def load_config(config_path):
     with open(config_path, 'r', encoding='utf-8') as f:
         return yaml.safe_load(f)
 
-def generate_scene(scene_id, config, robot_collision_bodies=None):
+def generate_scene(scene_id, config, robot_collision_bodies=None, robot_base_pos=None):
     # 1. 从配置中提取环境边界
     env_cfg = config['environment']
     workspace_bounds = np.array(env_cfg['workspace_bounds'])
@@ -175,6 +175,8 @@ def generate_scene(scene_id, config, robot_collision_bodies=None):
         'start_pos': start_pos.tolist(),
         'goal_pos': goal_pos.tolist()
     }
+    if robot_base_pos is not None:
+        data['robot_base_pos'] = list(robot_base_pos)
     
     # ---------------------------------------------------------
     # 【核心修改】自动创建 data/env 文件夹逻辑
@@ -225,6 +227,7 @@ if __name__ == "__main__":
     robot_cfg = config.get('robot', {})
     urdf_path = robot_cfg.get('urdf_path')
     robot_collision_bodies = None
+    base_pos = None
     if urdf_path:
         if os.path.isabs(urdf_path):
             urdf_full = urdf_path
@@ -247,7 +250,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         try:
             sid = int(sys.argv[1])
-            file_path = generate_scene(sid, config, robot_collision_bodies)
+            file_path = generate_scene(sid, config, robot_collision_bodies, robot_base_pos=base_pos)
             print(f"已生成: {file_path}")
         except ValueError:
             print("错误: Scene ID 必须是整数。")
@@ -261,7 +264,7 @@ if __name__ == "__main__":
         print(f"📏 环境大小: {config['environment']['workspace_bounds']}")
         
         for i in range(count):
-            generate_scene(i, config, robot_collision_bodies)
+            generate_scene(i, config, robot_collision_bodies, robot_base_pos=base_pos)
             if (i + 1) % 50 == 0:
                 print(f"   进度: {i+1}/{count}")
         

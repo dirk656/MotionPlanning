@@ -6,9 +6,14 @@ from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import sys
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+from robot_utils.urdf_to_geometry import parse_urdf
+from robot_utils.fk_solver import compute_fk
+
 # 配置
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 DATA_DIR = os.path.join(_PROJECT_ROOT, "data", "env")
+URDF_PATH = os.path.join(_PROJECT_ROOT, "src", "robots", "franka_panda_gem.urdf")
 # 默认查看最新的一个文件，或者通过命令行指定 ID
 DEFAULT_SCENE_ID =  2
 
@@ -58,6 +63,40 @@ def plot_cylinder(ax, center, radius, height, color='orange', alpha=0.6):
     
     ax.plot_surface(x_grid, y_grid, z_grid, color=color, alpha=alpha, linewidth=0)
 
+
+def plot_cylinder_oriented(ax, center, radius, length, rotation_matrix, color='orange', alpha=0.6):
+    """绘制沿任意方向的圆柱体"""
+    t = np.linspace(-length / 2, length / 2, 15)
+    theta = np.linspace(0, 2 * np.pi, 20)
+    T_g, Theta = np.meshgrid(t, theta)
+    X_local = radius * np.cos(Theta)
+    Y_local = radius * np.sin(Theta)
+    Z_local = T_g
+    pts_local = np.stack([X_local.ravel(), Y_local.ravel(), Z_local.ravel()], axis=1)
+    pts_world = (rotation_matrix @ pts_local.T).T + center
+    ax.plot_surface(
+        pts_world[:, 0].reshape(X_local.shape),
+        pts_world[:, 1].reshape(Y_local.shape),
+        pts_world[:, 2].reshape(Z_local.shape),
+        color=color, alpha=alpha, linewidth=0)
+
+
+def plot_robot_visuals(ax, world_visuals):
+    """将 URDF 的 visual 几何在 3D 轴上绘制"""
+    for vis in world_visuals:
+        geom = vis['geometry']
+        T = vis['transform']
+        pos = T[:3, 3]
+        R = T[:3, :3]
+        gtype = geom.get('type')
+        if gtype == 'sphere':
+            r = float(geom['radius'])
+            plot_sphere(ax, pos, r, color='#FFA500', alpha=0.9)
+        elif gtype == 'cylinder':
+            r = float(geom['radius'])
+            l = float(geom['length'])
+            plot_cylinder_oriented(ax, pos, r, l, R, color='#C0C0C0', alpha=0.8)
+
 def visualize_scene(scene_id):
     data = load_scene(scene_id)
     
@@ -100,6 +139,23 @@ def visualize_scene(scene_id):
     # 3. 绘制起点和终点
     ax.scatter(start_pos[0], start_pos[1], start_pos[2], c='lime', s=100, marker='o', label='Start', edgecolors='black')
     ax.scatter(goal_pos[0], goal_pos[1], goal_pos[2], c='red', s=100, marker='x', label='Goal', linewidths=2)
+    
+    # 4. 绘制机械臂
+    robot_base = data.get('robot_base_pos')
+    if robot_base and os.path.exists(URDF_PATH):
+        links, joints = parse_urdf(URDF_PATH)
+        world_visuals, link_transforms, _ = compute_fk(links, joints, base_pos=tuple(robot_base))
+        plot_robot_visuals(ax, world_visuals)
+        ax.scatter(*robot_base, c='blue', s=80, marker='s', label='Robot Base', edgecolors='black', zorder=5)
+        # 骨架线
+        joint_positions = []
+        for jnt in joints:
+            child_T = link_transforms.get(jnt['child'])
+            if child_T is not None:
+                joint_positions.append(child_T[:3, 3])
+        if joint_positions:
+            jp = np.array(joint_positions)
+            ax.plot(jp[:, 0], jp[:, 1], jp[:, 2], 'b-o', linewidth=1.5, markersize=3, alpha=0.7, label='Arm skeleton')
     
     # 设置标签和标题
     ax.set_xlabel('X')
