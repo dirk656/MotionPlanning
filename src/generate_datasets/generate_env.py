@@ -13,7 +13,7 @@ from robot_utils.fk_solver import compute_fk
 
 
 def check_point_in_obstacles(point, obstacles, clearance=0.0):
-    
+
     point_tuple = tuple(point.tolist())
     boxes, spheres, cylinders = [], [], []
     for obs in obstacles:
@@ -259,13 +259,13 @@ if __name__ == "__main__":
         count = config['environment']['default_count']
         output_dir = config['environment']['output_dir']
         
-        print(f"🚀 开始批量生成 {count} 个场景...")
-        print(f"📂 目标目录: {output_dir} (若不存在将自动创建)")
-        print(f"📏 环境大小: {config['environment']['workspace_bounds']}")
+        print(f"开始批量生成 {count} 个场景")
+        print(f"目标目录: {output_dir}")
+        print(f"环境大小: {config['environment']['workspace_bounds']}")
         
         for i in range(count):
             generate_scene(i, config, robot_collision_bodies, robot_base_pos=base_pos)
             if (i + 1) % 50 == 0:
                 print(f"   进度: {i+1}/{count}")
         
-        print(f"✅ 完成！所有文件已保存至: {os.path.abspath(output_dir)}")
+        print(f"所有文件已保存至: {os.path.abspath(output_dir)}")

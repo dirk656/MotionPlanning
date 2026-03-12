@@ -15,7 +15,7 @@ _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 DATA_DIR = os.path.join(_PROJECT_ROOT, "data", "env")
 URDF_PATH = os.path.join(_PROJECT_ROOT, "src", "robots", "franka_panda_gem.urdf")
 # 默认查看最新的一个文件，或者通过命令行指定 ID
-DEFAULT_SCENE_ID =  2
+DEFAULT_SCENE_ID =  3 
 
 def load_scene(scene_id):
     filename = os.path.join(DATA_DIR, f"env_{scene_id:05d}.json")

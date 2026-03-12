@@ -185,18 +185,32 @@ def main(scene_id=0):
     links, joints = parse_urdf(URDF_PATH)
     revolute = [j for j in joints if j['type'] in ('revolute', 'continuous')]
     n_dof = len(revolute)
+    # 沿 fixed 关节链追到运动链末端（真正的末端法兰）
     ee_link = revolute[-1]['child']
+    while True:
+        child_joint = next((j for j in joints if j['parent'] == ee_link and j['type'] == 'fixed'), None)
+        if child_joint is None:
+            break
+        ee_link = child_joint['child']
 
     print(f"机械臂 DOF={n_dof}, 末端link={ee_link}")
 
-    # 3. IK 求解起终点
+    # 构建碰撞检查器（IK 求解时用于筛选无碰撞解）
+    _col_checker = RRTConnect(
+        np.zeros(n_dof), np.zeros(n_dof),
+        step_len=0.1, iter_max=1,
+        links=links, joints=joints, obstacles=obstacles,
+        clearance=0.05, base_pos=base_pos, joint_limits=JOINT_LIMITS,
+    )
+
+    # 3. IK 求解起终点（碰撞感知）
     print("正在求解起点 IK ...")
     q_start, ok_s = solve_ik_multi_start(
         links, joints, start_pos, base_pos=base_pos,
-        joint_limits=JOINT_LIMITS, n_starts=30, tol=0.01, ee_link=ee_link
+        joint_limits=JOINT_LIMITS, n_starts=50, tol=0.01, ee_link=ee_link,
+        collision_checker=_col_checker.is_collision_free,
     )
     if not ok_s:
-        # 即使没精确到达，也尝试继续
         ja = {revolute[k]['name']: q_start[k] for k in range(n_dof)}
         _, lt, _ = compute_fk(links, joints, joint_angles=ja, base_pos=base_pos)
         err = np.linalg.norm(lt[ee_link][:3, 3] - start_pos)
@@ -209,7 +223,8 @@ def main(scene_id=0):
     print("正在求解终点 IK ...")
     q_goal, ok_g = solve_ik_multi_start(
         links, joints, goal_pos, base_pos=base_pos,
-        joint_limits=JOINT_LIMITS, n_starts=30, tol=0.01, ee_link=ee_link
+        joint_limits=JOINT_LIMITS, n_starts=50, tol=0.01, ee_link=ee_link,
+        collision_checker=_col_checker.is_collision_free,
     )
     if not ok_g:
         ja = {revolute[k]['name']: q_goal[k] for k in range(n_dof)}
@@ -224,11 +239,13 @@ def main(scene_id=0):
     # 4. RRT-Connect 规划
     print("正在进行 RRT-Connect 路径规划 ...")
     planner = RRTConnect(
-        links, joints, obstacles, base_pos=base_pos,
-        joint_limits=JOINT_LIMITS, step_size=0.2, max_iter=5000
+        q_start, q_goal,
+        step_len=0.1, iter_max=5000,
+        links=links, joints=joints, obstacles=obstacles,
+        clearance=0.05, base_pos=base_pos, joint_limits=JOINT_LIMITS,
     )
-    path = planner.plan(q_start, q_goal)
-    if path is None:
+    path = planner.planning()
+    if len(path) == 0:
         print("路径规划失败"); return
     print(f"原始路径: {len(path)} 个节点")
 
@@ -237,7 +254,7 @@ def main(scene_id=0):
     print(f"平滑后路径: {len(path)} 个节点")
 
     # 帧间插值让动画更流畅
-    frames = interpolate_path(path, n_interp=5)
+    frames = interpolate_path(path, n_interp=30)
     print(f"动画帧数: {len(frames)}")
 
     # 5. 可视化动画
@@ -297,9 +314,13 @@ def main(scene_id=0):
     plt.tight_layout()
     plt.show()
 
-
 if __name__ == "__main__":
-    sid = 0
+    scene_id = 0
     if len(sys.argv) > 1:
-        sid = int(sys.argv[1])
-    main(sid)
+        try:
+            scene_id = int(sys.argv[1])
+        except ValueError:
+            print("用法: python test_arm.py [scene_id]")
+            print("如果不提供 ID，默认查看 scene_id=0 的场景。")
+    main(scene_id)
+

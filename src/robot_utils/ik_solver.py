@@ -1,82 +1,65 @@
 import numpy as np
-from robot_utils.fk_solver import compute_fk
-from robot_utils.rotation_matrix import rotation_matrix_axis_angle
+from robot_utils.fk_solver import precompute_ik_cache, fk_for_ik
 
 
 def numerical_ik(links, joints, target_pos, base_pos=(0, 0, 0),
                  joint_limits=None, q_init=None,
-                 max_iter=1000, tol=1e-3, alpha=0.5,
-                 ee_link=None):
+                 max_iter=200, tol=1e-3,
+                 ee_link=None, _ik_cache=None):
     """
-    数值迭代逆运动学（雅可比伪逆法），仅求解位置（3-DOF 目标）。
-
-    Args:
-        links, joints: parse_urdf 返回的结构
-        target_pos: (3,) 目标末端位置
-        base_pos: 机械臂基座位置
-        joint_limits: (n_dof, 2) 关节上下限，None 则不约束
-        q_init: 初始关节角，None 则随机
-        max_iter: 最大迭代次数
-        tol: 位置误差容忍度
-        alpha: 步长因子
-        ee_link: 末端执行器 link 名称，None 则取运动链最后一个 link
-
-    Returns:
-        q: (n_dof,) 关节角度，求解失败返回 None
-        success: bool
+    数值迭代逆运动学（解析几何雅可比 + 阻尼最小二乘），仅求解位置（3-DOF 目标）。
+    每次迭代只需 1 次 FK（而非 n_dof+1 次有限差分）。
     """
-    target_pos = np.array(target_pos, dtype=float)
+    target_pos = np.asarray(target_pos, dtype=float)
 
-    # 提取可动关节
     revolute_joints = [j for j in joints if j['type'] in ('revolute', 'continuous')]
     n_dof = len(revolute_joints)
-    joint_names = [j['name'] for j in revolute_joints]
 
     if ee_link is None:
         ee_link = revolute_joints[-1]['child'] if revolute_joints else joints[-1]['child']
 
     if joint_limits is not None:
-        joint_limits = np.array(joint_limits)
+        joint_limits = np.asarray(joint_limits)
     else:
-        joint_limits = np.array([[-np.pi, np.pi]] * n_dof)
+        joint_limits = np.full((n_dof, 2), [-np.pi, np.pi])
 
     if q_init is not None:
         q = np.array(q_init, dtype=float).copy()
     else:
-        q = (joint_limits[:, 0] + joint_limits[:, 1]) / 2
+        q = (joint_limits[:, 0] + joint_limits[:, 1]) * 0.5
 
-    delta = 1e-4  # 有限差分步长
+    # 预计算静态数据（可由 solve_ik_multi_start 传入以避免重复计算）
+    if _ik_cache is None:
+        _ik_cache = precompute_ik_cache(joints)
+    axes = _ik_cache['axes']
+
+    base_T = np.eye(4)
+    base_T[:3, 3] = np.asarray(base_pos, dtype=float)
+    I3 = np.eye(3)
 
     for _ in range(max_iter):
-        # 当前 FK
-        ja = {joint_names[i]: q[i] for i in range(n_dof)}
-        _, link_T, _ = compute_fk(links, joints, joint_angles=ja, base_pos=base_pos)
-        ee_T = link_T.get(ee_link)
-        if ee_T is None:
-            return None, False
-        ee_pos = ee_T[:3, 3]
+        # 一次 FK 同时得到末端位置和各关节世界坐标系
+        ee_pos, joint_frames = fk_for_ik(joints, q, base_T, _ik_cache, ee_link)
 
         error = target_pos - ee_pos
-        if np.linalg.norm(error) < tol:
+        err_norm = np.linalg.norm(error)
+        if err_norm < tol:
             return q, True
 
-        # 数值雅可比 (3 x n_dof)
+        # 解析几何雅可比 (3 × n_dof): J_i = z_i × (p_ee − p_i)
         J = np.zeros((3, n_dof))
         for i in range(n_dof):
-            q_perturb = q.copy()
-            q_perturb[i] += delta
-            ja_p = {joint_names[k]: q_perturb[k] for k in range(n_dof)}
-            _, link_T_p, _ = compute_fk(links, joints, joint_angles=ja_p, base_pos=base_pos)
-            ee_pos_p = link_T_p[ee_link][:3, 3]
-            J[:, i] = (ee_pos_p - ee_pos) / delta
+            Tf = joint_frames[i]
+            z_i = Tf[:3, :3] @ axes[i]
+            p_i = Tf[:3, 3]
+            J[:, i] = np.cross(z_i, ee_pos - p_i)
 
-        # 阻尼最小二乘（DLS）
-        damping = 1e-3
-        JJT = J @ J.T + damping * np.eye(3)
+        # 阻尼最小二乘（DLS），全步更新
+        damping = 1e-2
+        JJT = J @ J.T + damping * I3
         dq = J.T @ np.linalg.solve(JJT, error)
 
-        q = q + alpha * dq
-        # 限位
+        q = q + dq
         q = np.clip(q, joint_limits[:, 0], joint_limits[:, 1])
 
     return q, False
@@ -84,9 +67,12 @@ def numerical_ik(links, joints, target_pos, base_pos=(0, 0, 0),
 
 def solve_ik_multi_start(links, joints, target_pos, base_pos=(0, 0, 0),
                          joint_limits=None, n_starts=20,
-                         max_iter=1000, tol=1e-3, ee_link=None):
+                         max_iter=200, tol=1e-3, ee_link=None,
+                         collision_checker=None):
     """
     多初始值 IK 求解，返回误差最小的结果。
+    collision_checker: 可选，callable(q) -> bool，返回 True 表示无碰撞。
+                       有碰撞检查时，优先返回无碰撞的精确解。
     """
     revolute_joints = [j for j in joints if j['type'] in ('revolute', 'continuous')]
     n_dof = len(revolute_joints)
@@ -96,8 +82,19 @@ def solve_ik_multi_start(links, joints, target_pos, base_pos=(0, 0, 0),
     else:
         joint_limits = np.array([[-np.pi, np.pi]] * n_dof)
 
+    if ee_link is None:
+        ee_link = revolute_joints[-1]['child'] if revolute_joints else joints[-1]['child']
+
+    # 预计算 IK 缓存，所有 start 共享
+    _ik_cache = precompute_ik_cache(joints)
+
+    base_T = np.eye(4)
+    base_T[:3, 3] = np.asarray(base_pos, dtype=float)
+
     best_q = None
     best_err = np.inf
+    best_collision_free_q = None
+    best_collision_free_err = np.inf
 
     for i in range(n_starts):
         if i == 0:
@@ -108,21 +105,27 @@ def solve_ik_multi_start(links, joints, target_pos, base_pos=(0, 0, 0),
         q, success = numerical_ik(
             links, joints, target_pos, base_pos=base_pos,
             joint_limits=joint_limits, q_init=q0,
-            max_iter=max_iter, tol=tol, ee_link=ee_link
+            max_iter=max_iter, tol=tol, ee_link=ee_link,
+            _ik_cache=_ik_cache
         )
         if q is not None:
-            ja = {revolute_joints[k]['name']: q[k] for k in range(n_dof)}
-            _, link_T, _ = compute_fk(links, joints, joint_angles=ja, base_pos=base_pos)
-            if ee_link is None:
-                ee_link_name = revolute_joints[-1]['child']
-            else:
-                ee_link_name = ee_link
-            ee_pos = link_T[ee_link_name][:3, 3]
-            err = np.linalg.norm(np.array(target_pos) - ee_pos)
+            ee_pos, _ = fk_for_ik(joints, q, base_T, _ik_cache, ee_link)
+            err = np.linalg.norm(np.asarray(target_pos) - ee_pos)
+
             if err < best_err:
                 best_err = err
                 best_q = q.copy()
-            if success:
+
+            if collision_checker is not None and success:
+                if collision_checker(q):
+                    if err < best_collision_free_err:
+                        best_collision_free_err = err
+                        best_collision_free_q = q.copy()
+                    return best_collision_free_q, True
+            elif collision_checker is None and success:
                 return best_q, True
+
+    if best_collision_free_q is not None and best_collision_free_err < tol:
+        return best_collision_free_q, True
 
     return best_q, (best_err < tol)

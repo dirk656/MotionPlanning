@@ -1,0 +1,188 @@
+"""
+对 data/env/ 中的每个场景文件执行运动规划验证。
+流程: 加载场景 → IK 求解起/终点 → RRT-Connect 规划
+规划失败的场景文件将被删除，最后对剩余文件重新编号。
+
+用法:
+    python generate_env_raw.py                  # 验证全部场景
+    python generate_env_raw.py --start 0 --end 100   # 验证 [0, 100) 范围
+"""
+import json
+import os
+import sys
+import glob
+import argparse
+import numpy as np
+
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+DATA_DIR = os.path.join(_PROJECT_ROOT, "data", "env")
+URDF_PATH = os.path.join(_PROJECT_ROOT, "src", "robots", "franka_panda_gem.urdf")
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+from robot_utils.urdf_to_geometry import parse_urdf
+from robot_utils.fk_solver import compute_fk
+from robot_utils.ik_solver import solve_ik_multi_start
+from robot_utils.rrt_connect import RRTConnect, shortcut_path
+
+# ───────── Franka Panda 关节限位 ─────────
+JOINT_LIMITS = np.array([
+    [-2.9007, 2.9007],
+    [-1.8361, 1.8361],
+    [-2.9007, 2.9007],
+    [-3.0770, -0.1169],
+    [-2.8763, 2.8763],
+    [0.4398, 4.6216],
+    [-3.0508, 3.0508],
+])
+
+
+def get_ee_link(joints):
+    """沿 fixed 关节链追到运动链末端"""
+    revolute = [j for j in joints if j['type'] in ('revolute', 'continuous')]
+    ee_link = revolute[-1]['child']
+    while True:
+        child_joint = next((j for j in joints if j['parent'] == ee_link and j['type'] == 'fixed'), None)
+        if child_joint is None:
+            break
+        ee_link = child_joint['child']
+    return ee_link
+
+
+def validate_scene(links, joints, ee_link, scene_path):
+    """
+    验证单个场景是否可规划。
+    返回 True 表示规划成功，False 表示应删除。
+    """
+    with open(scene_path, 'r') as f:
+        data = json.load(f)
+
+    obstacles = data['obstacles']
+    start_pos = np.array(data['start_pos'])
+    goal_pos = np.array(data['goal_pos'])
+    base_pos = tuple(data.get('robot_base_pos', [0.0, 0.0, 0.0]))
+
+    revolute = [j for j in joints if j['type'] in ('revolute', 'continuous')]
+    n_dof = len(revolute)
+
+    # 构建碰撞检查器
+    col_checker = RRTConnect(
+        np.zeros(n_dof), np.zeros(n_dof),
+        step_len=0.1, iter_max=1,
+        links=links, joints=joints, obstacles=obstacles,
+        clearance=0.05, base_pos=base_pos, joint_limits=JOINT_LIMITS,
+    )
+
+    # IK 求解起点
+    q_start, ok_s = solve_ik_multi_start(
+        links, joints, start_pos, base_pos=base_pos,
+        joint_limits=JOINT_LIMITS, n_starts=50, tol=0.01, ee_link=ee_link,
+        collision_checker=col_checker.is_collision_free,
+    )
+    if not ok_s:
+        if q_start is None:
+            return False
+        ja = {revolute[k]['name']: q_start[k] for k in range(n_dof)}
+        _, lt, _ = compute_fk(links, joints, joint_angles=ja, base_pos=base_pos)
+        err = np.linalg.norm(lt[ee_link][:3, 3] - start_pos)
+        if err > 0.05:
+            return False
+
+    # IK 求解终点
+    q_goal, ok_g = solve_ik_multi_start(
+        links, joints, goal_pos, base_pos=base_pos,
+        joint_limits=JOINT_LIMITS, n_starts=50, tol=0.01, ee_link=ee_link,
+        collision_checker=col_checker.is_collision_free,
+    )
+    if not ok_g:
+        if q_goal is None:
+            return False
+        ja = {revolute[k]['name']: q_goal[k] for k in range(n_dof)}
+        _, lt, _ = compute_fk(links, joints, joint_angles=ja, base_pos=base_pos)
+        err = np.linalg.norm(lt[ee_link][:3, 3] - goal_pos)
+        if err > 0.05:
+            return False
+
+    # RRT-Connect 规划
+    planner = RRTConnect(
+        q_start, q_goal,
+        step_len=0.1, iter_max=5000,
+        links=links, joints=joints, obstacles=obstacles,
+        clearance=0.05, base_pos=base_pos, joint_limits=JOINT_LIMITS,
+    )
+    path = planner.planning()
+    if path is None or len(path) == 0:
+        return False
+
+    return True
+
+
+def renumber_scenes(data_dir):
+    """将剩余的场景文件按顺序重新编号"""
+    files = sorted(glob.glob(os.path.join(data_dir, "env_*.json")))
+    for new_id, old_path in enumerate(files):
+        new_name = os.path.join(data_dir, f"env_{new_id:05d}.json")
+        if old_path != new_name:
+            # 更新文件内的 scene_id
+            with open(old_path, 'r') as f:
+                data = json.load(f)
+            data['scene_id'] = new_id
+            with open(old_path, 'w') as f:
+                json.dump(data, f, indent=2)
+            os.rename(old_path, new_name)
+    print(f"重新编号完成，共 {len(files)} 个场景")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="验证场景可规划性，删除不可规划的场景")
+    parser.add_argument('--start', type=int, default=None, help="起始场景 ID（含）")
+    parser.add_argument('--end', type=int, default=None, help="结束场景 ID（不含）")
+    parser.add_argument('--no-renumber', action='store_true', help="不重新编号")
+    args = parser.parse_args()
+
+    # 收集场景文件
+    all_files = sorted(glob.glob(os.path.join(DATA_DIR, "env_*.json")))
+    if not all_files:
+        print("没有找到场景文件"); return
+
+    if args.start is not None or args.end is not None:
+        start = args.start or 0
+        end = args.end or len(all_files)
+        all_files = all_files[start:end]
+
+    print(f"共 {len(all_files)} 个场景待验证")
+
+    # 解析 URDF（只需一次）
+    links, joints = parse_urdf(URDF_PATH)
+    ee_link = get_ee_link(joints)
+    print(f"URDF 加载完成，ee_link={ee_link}")
+
+    success_count = 0
+    fail_count = 0
+    deleted_files = []
+
+    for i, scene_path in enumerate(all_files):
+        scene_name = os.path.basename(scene_path)
+        try:
+            ok = validate_scene(links, joints, ee_link, scene_path)
+        except Exception as e:
+            print(f"  [{i+1}/{len(all_files)}] {scene_name}: 异常 - {e}")
+            ok = False
+
+        if ok:
+            success_count += 1
+            print(f"  [{i+1}/{len(all_files)}] {scene_name}: 通过")
+        else:
+            fail_count += 1
+            print(f"  [{i+1}/{len(all_files)}] {scene_name}: 失败，删除")
+            deleted_files.append(scene_path)
+            os.remove(scene_path)
+
+    print(f"\n验证完成: 通过 {success_count}, 失败 {fail_count} (已删除)")
+
+    # 重新编号
+    if not args.no_renumber and fail_count > 0:
+        renumber_scenes(DATA_DIR)
+
+
+if __name__ == "__main__":
+    main()
