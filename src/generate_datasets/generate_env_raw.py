@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 from robot_utils.urdf_to_geometry import parse_urdf
 from robot_utils.fk_solver import compute_fk
 from robot_utils.ik_solver import solve_ik_multi_start
-from robot_utils.rrt_connect import RRTConnect, shortcut_path
+from robot_utils.rrt_connect import RRTConnect
 
 # ───────── Franka Panda 关节限位 ─────────
 JOINT_LIMITS = np.array([
@@ -112,6 +112,20 @@ def validate_scene(links, joints, ee_link, scene_path):
     path = planner.planning()
     if path is None or len(path) == 0:
         return False
+
+    # 规划成功后，保存末端轨迹到场景文件
+    ee_path = []
+    for q in path:
+        joint_angles = {revolute[k]['name']: q[k] for k in range(n_dof)}
+        _, link_transforms, _ = compute_fk(links, joints, joint_angles=joint_angles, base_pos=base_pos)
+        ee_pos = link_transforms[ee_link][:3, 3]
+        ee_path.append(ee_pos.tolist())
+
+    with open(scene_path, 'r') as f:
+        scene_data = json.load(f)
+    scene_data['ee_path'] = ee_path
+    with open(scene_path, 'w') as f:
+        json.dump(scene_data, f, indent=2)
 
     return True
 
