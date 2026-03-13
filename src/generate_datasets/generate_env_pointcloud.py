@@ -59,7 +59,7 @@ def _convert_obstacles_to_env_local(scene, ws):
 
         if otype == "box":
             size = np.asarray(obs["size"], dtype=float)
-            xyz_min = pos_local - 0.5 * size
+            xyz_min = pos_local - 0.5 * size 
             box_obs.append([xyz_min[0], xyz_min[1], xyz_min[2], size[0], size[1], size[2]])
         elif otype in ("sphere", "ball"):
             r = float(obs["radius"])
@@ -75,12 +75,12 @@ def _convert_obstacles_to_env_local(scene, ws):
     return box_obs, ball_obs
 
 
-def scene_to_pointcloud(scene_path, output_dir, cfg):
+def scene_to_sample(scene_path, cfg):
     with open(scene_path, "r") as f:
         scene = json.load(f)
 
     if "ee_path" not in scene:
-        return False
+        return None
 
     ws = _scene_workspace(scene, cfg["env_yaml"])
     origin = ws[:3]
@@ -120,33 +120,55 @@ def scene_to_pointcloud(scene_path, output_dir, cfg):
     masks["free"] = (1 - masks["start"]) * (1 - masks["goal"])
 
     token = f"env_{scene['scene_id']:05d}"
-    np.savez(
-        join(output_dir, f"{token}.npz"),
-        pc=pc.astype(np.float32),
-        start=masks["start"].astype(np.float32),
-        goal=masks["goal"].astype(np.float32),
-        astar=masks["astar"].astype(np.float32),
-        free=masks["free"].astype(np.float32),
-        token=token,
-        scene_id=scene["scene_id"],
-    )
-    return True
+    return {
+        "pc": pc.astype(np.float32),
+        "start": np.asarray(masks["start"], dtype=np.float32).reshape(-1),
+        "goal": np.asarray(masks["goal"], dtype=np.float32).reshape(-1),
+        "free": np.asarray(masks["free"], dtype=np.float32).reshape(-1),
+        "astar": np.asarray(masks["astar"], dtype=np.float32).reshape(-1),
+        "token": token,
+    }
+
+
+def _save_split_npz(out_path, samples):
+    if len(samples) == 0:
+        np.savez(
+            out_path,
+            pc=np.empty((0, 0, 3), dtype=np.float32),
+            start=np.empty((0, 0), dtype=np.float32),
+            goal=np.empty((0, 0), dtype=np.float32),
+            free=np.empty((0, 0), dtype=np.float32),
+            astar=np.empty((0, 0), dtype=np.float32),
+            token=np.empty((0,), dtype="U1"),
+        )
+        return
+
+    pc = np.stack([s["pc"] for s in samples], axis=0).astype(np.float32)
+    start = np.stack([s["start"] for s in samples], axis=0).astype(np.float32)
+    goal = np.stack([s["goal"] for s in samples], axis=0).astype(np.float32)
+    free = np.stack([s["free"] for s in samples], axis=0).astype(np.float32)
+    astar = np.stack([s["astar"] for s in samples], axis=0).astype(np.float32)
+    token = np.asarray([s["token"] for s in samples])
+
+    np.savez(out_path, pc=pc, start=start, goal=goal, free=free, astar=astar, token=token)
 
 
 def main():
     env_yaml = load_env_config(_ENV_CFG_PATH)
 
     default_input = _resolve_from_project(env_yaml["environment"].get("output_dir", "data/env"))
-    default_output = _resolve_from_project("data/env_pc")
+    default_output = _resolve_from_project("data/random_3d")
 
     p = argparse.ArgumentParser()
     p.add_argument("--input_dir", default=default_input, help="验证通过的场景目录")
-    p.add_argument("--output_dir", default=default_output, help="点云输出目录")
+    p.add_argument("--output_dir", default=default_output, help="训练数据目录，输出 train.npz/val.npz")
     p.add_argument("--n_points", type=int, default=4096)
     p.add_argument("--path_rad", type=float, default=float(env_yaml["collision"].get("path_corridor_radius", 0.3)))
     p.add_argument("--start_rad", type=float, default=float(env_yaml["collision"].get("start_radius", 0.2)))
     p.add_argument("--goal_rad", type=float, default=float(env_yaml["collision"].get("goal_radius", 0.2)))
     p.add_argument("--over_sample", type=int, default=5)
+    p.add_argument("--train_ratio", type=float, default=0.9, help="训练集比例")
+    p.add_argument("--seed", type=int, default=42, help="切分随机种子")
     args = p.parse_args()
 
     runtime_cfg = {
@@ -158,24 +180,52 @@ def main():
         "over_sample": args.over_sample,
     }
 
+    if not (0.0 < args.train_ratio < 1.0):
+        raise ValueError("--train_ratio 必须在 (0,1) 之间")
+
     os.makedirs(args.output_dir, exist_ok=True)
     scenes = sorted(glob.glob(join(args.input_dir, "env_*.json")))
     print(f"处理 {len(scenes)} 个场景 -> {args.output_dir}")
 
-    success = 0
+    samples = []
+    skipped = 0
     for sp in scenes:
         try:
             with open(sp, "r") as f:
                 d = json.load(f)
             if "ee_path" not in d:
                 print(f"跳过 {os.path.basename(sp)}: 无 ee_path")
+                skipped += 1
                 continue
-            if scene_to_pointcloud(sp, args.output_dir, runtime_cfg):
-                success += 1
+            sample = scene_to_sample(sp, runtime_cfg)
+            if sample is not None:
+                samples.append(sample)
         except Exception as e:
             print(f"{os.path.basename(sp)} 失败: {e}")
 
-    print(f"完成: {success}/{len(scenes)} 个场景生成点云")
+    if len(samples) == 0:
+        raise RuntimeError("没有可用样本，无法生成 train/val 数据")
+
+    rng = np.random.default_rng(args.seed)
+    indices = np.arange(len(samples))
+    rng.shuffle(indices)
+    split_idx = int(len(indices) * args.train_ratio)
+    split_idx = max(1, min(split_idx, len(indices) - 1))
+
+    train_samples = [samples[i] for i in indices[:split_idx]]
+    val_samples = [samples[i] for i in indices[split_idx:]]
+
+    train_path = join(args.output_dir, "train.npz")
+    val_path = join(args.output_dir, "val.npz")
+    _save_split_npz(train_path, train_samples)
+    _save_split_npz(val_path, val_samples)
+
+    print(
+        f"完成: 可用 {len(samples)} / {len(scenes)} (跳过 {skipped}) | "
+        f"train={len(train_samples)}, val={len(val_samples)}"
+    )
+    print(f"已保存: {train_path}")
+    print(f"已保存: {val_path}")
 
 
 if __name__ == "__main__":
