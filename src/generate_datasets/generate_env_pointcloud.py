@@ -3,18 +3,23 @@ import argparse
 import glob
 import json
 import os
+import sys
 from os.path import join
 
 import numpy as np
 import yaml
 
-from datasets.point_cloud_mask_utils import get_point_cloud_mask_around_points
-from datasets_3d.point_cloud_mask_utils_3d import generate_rectangle_point_cloud_3d_v1
-from planning_utils.env import Env
-
 
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 _ENV_CFG_PATH = os.path.join(_PROJECT_ROOT, "src", "config", "env.yaml")
+_SRC_ROOT = os.path.join(_PROJECT_ROOT, "src")
+
+if _SRC_ROOT not in sys.path:
+    sys.path.insert(0, _SRC_ROOT)
+
+from generate_datasets_utils.point_cloud_mask_utils import get_point_cloud_mask_around_points
+from generate_datasets_utils.point_cloud_mask_utils_3d import generate_rectangle_point_cloud_3d_v1
+from planning_utils.env import Env
 
 
 def _resolve_from_project(path_str):
