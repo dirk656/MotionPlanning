@@ -114,10 +114,10 @@ class RRTConnect:
                     # tree_b 路径: root_b → connection, 需要反转
                     if swapped:
                         # tree_a=goal树, tree_b=start树
-                        self.path = np.vstack([path_b, path_a[::-1]])
+                        self.path = np.vstack([path_b[:-1], path_a[::-1]])
                     else:
                         # tree_a=start树, tree_b=goal树
-                        self.path = np.vstack([path_a, path_b[::-1]])
+                        self.path = np.vstack([path_a[:-1], path_b[::-1]])
                     return self.path
 
             # 交换两棵树以均衡生长
@@ -232,8 +232,11 @@ class RRTConnect:
                 return False
         return True
 
-    def is_edge_valid(self, q1, q2, n_checks=5):
+    def is_edge_valid(self, q1, q2, n_checks=None):
         """检查 q1 到 q2 之间的线性插值路径是否无碰撞"""
+        if n_checks is None:
+            dist = np.linalg.norm(np.array(q1) - np.array(q2))
+            n_checks = max(5, int(dist / (self.step_len / 2.0)))
         for t in np.linspace(0, 1, n_checks):
             q_mid = q1 + t * (q2 - q1)
             if not self.is_collision_free(q_mid):
@@ -343,7 +346,7 @@ def shortcut_path(planner, path, n_attempts=100, max_failures=20):
         j = np.random.randint(i + min_span, len(path))
         
         # 碰撞检测
-        if planner.is_edge_valid(path[i], path[j], n_checks=15):
+        if planner.is_edge_valid(path[i], path[j]):
             # 成功捷径：截断中间部分
             # 注意：path[:i+1] 包含 i, path[j:] 包含 j
             new_path = path[:i + 1] + path[j:]
