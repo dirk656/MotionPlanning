@@ -5,10 +5,10 @@ import sys
 import glob
 import argparse
 import numpy as np
-
+import yaml
+#导入
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-DATA_DIR = os.path.join(_PROJECT_ROOT, "data", "env")
-URDF_PATH = os.path.join(_PROJECT_ROOT, "src", "robots", "franka_panda_gem.urdf")
+DEFAULT_CONFIG_PATH = os.path.join(_PROJECT_ROOT, "src", "config", "env.yaml")
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from robot_utils.urdf_to_geometry import parse_urdf
@@ -126,8 +126,6 @@ def validate_scene(links, joints, ee_link, scene_path, urdf_path):
         ee_pos = link_transforms[ee_link][:3, 3]
         ee_path.append(ee_pos.tolist())
 
-    with open(scene_path, 'r') as f:
-        scene_data = json.load(f)
     scene_data['ee_path'] = ee_path
     with open(scene_path, 'w') as f:
         json.dump(scene_data, f, indent=2)
@@ -152,14 +150,31 @@ def renumber_scenes(data_dir):
 
 
 def main():
+    
     parser = argparse.ArgumentParser(description="验证场景可规划性，删除不可规划的场景")
+    parser.add_argument('--config', type=str, default=DEFAULT_CONFIG_PATH, help="配置文件路径")
     parser.add_argument('--start', type=int, default=None, help="起始场景 ID（含）")
     parser.add_argument('--end', type=int, default=None, help="结束场景 ID（不含）")
     parser.add_argument('--no-renumber', action='store_true', help="不重新编号")
     args = parser.parse_args()
 
+    config = load_config(args.config)
+    env_cfg = config.get('environment', {})
+    robot_cfg = config.get('robot', {})
+    col_cfg = config.get('collision', {})
+    generation_cfg = config.get('generation', {})
+
+    data_dir_cfg = env_cfg.get('output_dir', 'data/env')
+    data_dir = data_dir_cfg if os.path.isabs(data_dir_cfg) else os.path.join(_PROJECT_ROOT, data_dir_cfg)
+
+    urdf_cfg = robot_cfg.get('urdf_path', 'robots/franka_panda_gem.urdf')
+    urdf_path = urdf_cfg if os.path.isabs(urdf_cfg) else os.path.join(_PROJECT_ROOT, 'src', urdf_cfg)
+
+    planner_clearance = float(col_cfg.get('clearance', 0.05))
+    progress_interval = int(generation_cfg.get('progress_interval', 50))
+
     # 收集场景文件
-    all_files = sorted(glob.glob(os.path.join(DATA_DIR, "env_*.json")))
+    all_files = sorted(glob.glob(os.path.join(data_dir, "env_*.json")))
     if not all_files:
         print("没有找到场景文件"); return
 
@@ -172,9 +187,15 @@ def main():
 
     # 先做一次运动学后端检查，避免跑到后面才因为环境问题失败。
     # 解析 URDF（只需一次）
-    links, joints = parse_urdf(URDF_PATH)
+    links, joints = parse_urdf(urdf_path)
     ee_link = get_ee_link(joints)
+    pin_model, pin_data = build_pin_model(urdf_path)
+    if pin_model.nq != JOINT_LIMITS.shape[0]:
+        raise ValueError(
+            f"Pinocchio 模型自由度({pin_model.nq})与 JOINT_LIMITS({JOINT_LIMITS.shape[0]})不一致"
+        )
     print(f"URDF 加载完成，ee_link={ee_link}")
+
 
     success_count = 0
     fail_count = 0
@@ -194,7 +215,8 @@ def main():
 
         if ok:
             success_count += 1
-            print(f"  [{i+1}/{len(all_files)}] {scene_name}: 通过")
+            if progress_interval <= 0 or ((i + 1) % progress_interval == 0):
+                print(f"  [{i+1}/{len(all_files)}] {scene_name}: 通过")
         else:
             fail_count += 1
             print(f"  [{i+1}/{len(all_files)}] {scene_name}: 失败，删除")
@@ -205,7 +227,7 @@ def main():
 
     # 重新编号
     if not args.no_renumber and fail_count > 0:
-        renumber_scenes(DATA_DIR)
+        renumber_scenes(data_dir)
 
 
 if __name__ == "__main__":

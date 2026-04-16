@@ -4,9 +4,8 @@ import os
 import sys
 import yaml
 
-config_path = "/config/env.yaml"
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
 from planning_utils.collision_check_utils import points_in_AABB_3d, points_in_ball_3d, points_in_cylinder_3d, points_in_robot_arm_3d
 from robot_utils.urdf_to_geometry import parse_urdf, get_robot_collision_bodies
 from robot_utils.compute_kinematic import compute_fk
@@ -37,6 +36,7 @@ def check_point_in_obstacles(point, obstacles, clearance=0.0):
     return in_box or in_sphere or in_cylinder
 
 
+
 def load_config(config_path):
     if not os.path.exists(config_path):
         raise FileNotFoundError(f" '{config_path}' 未找到")
@@ -45,31 +45,35 @@ def load_config(config_path):
     with open(config_path, 'r', encoding='utf-8') as f:
         return yaml.safe_load(f)
 
-def generate_scene(scene_id, config, robot_collision_bodies=None, robot_base_pos=None):
+
+
+def generate_scene(scene_id, robot_collision_bodies=None, robot_base_pos=None):
+    if CONFIG is None:
+        raise RuntimeError("配置未初始化，请先加载 env.yaml")
+
     # 1. 从配置中提取环境边界
-    env_cfg = config['environment']
+    env_cfg = CONFIG['environment']
     workspace_bounds = np.array(env_cfg['workspace_bounds'])
     min_bounds = workspace_bounds[:3]
     max_bounds = workspace_bounds[3:]
-    
-    
     # 2. 从配置中提取障碍物参数
-    obs_cfg = config['obstacles']
+    obs_cfg = CONFIG['obstacles']
     num_obstacles = obs_cfg['count']
 
+
     # 碰撞安全区
-    col_cfg = config.get('collision', {})
-    start_radius = col_cfg.get('start_radius', 0.5)
-    goal_radius = col_cfg.get('goal_radius', 0.5)
-    min_start_goal_distance = col_cfg.get('min_start_goal_distance', 2.0)
-    max_start_goal_attempt = col_cfg.get('max_start_goal_attempt', 200)
-    robot_clearance = col_cfg.get('robot_clearance', 0.1)
-    boundary_margin = col_cfg.get('boundary_margin', 0.05)
+    col_cfg = CONFIG.get('collision', {})
+    start_radius = col_cfg.get('start_radius')
+    goal_radius = col_cfg.get('goal_radius')
+    min_start_goal_distance = col_cfg.get('min_start_goal_distance')
+    iter_max = col_cfg.get('max_start_goal_attempt')
+    robot_clearance = col_cfg.get('robot_clearance')
+    boundary_margin = col_cfg.get('boundary_margin')
     sg_min = min_bounds + boundary_margin  # 起终点采样的收缩边界
     sg_max = max_bounds - boundary_margin
 
     # 先生成起终点，确保距离大于 min_start_goal_distance 且不在机械臂内
-    for _ in range(max_start_goal_attempt):
+    for _ in range(iter_max):
         start_pos = np.random.uniform(sg_min, sg_max)
         goal_pos = np.random.uniform(sg_min, sg_max)
         if np.sum((start_pos - goal_pos) ** 2) <= min_start_goal_distance ** 2:
@@ -81,10 +85,14 @@ def generate_scene(scene_id, config, robot_collision_bodies=None, robot_base_pos
                 continue
         break
     else:
-        print(f"警告: 场景 {scene_id} 起终点采样 {max_start_goal_attempt} 次仍不满足约束")
+        print(f"警告: 场景 {scene_id} 起终点采样 {iter_max} 次仍不满足约束")
     # 路径管道：保证起终点连线附近有障碍物
-    path_corridor_radius = col_cfg.get('path_corridor_radius', 2.0)
-    min_path_obstacles = col_cfg.get('min_path_obstacles', 2)
+    path_corridor_radius = col_cfg.get('path_corridor_radius')
+    min_path_obstacles = col_cfg.get('min_path_obstacles')
+    sample_pos_attempts = int(col_cfg.get('sample_pos_attempts', 200))
+    path_interp_min = float(col_cfg.get('path_interp_min', 0.1))
+    path_interp_max = float(col_cfg.get('path_interp_max', 0.9))
+    path_noise_scale = float(col_cfg.get('path_noise_scale', 3.0))
 
     def point_to_segment_dist(p, a, b):
         """点 p 到线段 ab 的最短距离"""
@@ -94,12 +102,13 @@ def generate_scene(scene_id, config, robot_collision_bodies=None, robot_base_pos
 
     def sample_pos(near_path=False):
         """采样一个满足安全区约束的位置，near_path=True 时约束在管道内"""
-        for _ in range(200):
+        for _ in range(sample_pos_attempts):
             if near_path:
                 # 在起终点连线上随机插值一个点，然后加扰动
-                t = np.random.uniform(0.1, 0.9)
+                t = np.random.uniform(path_interp_min, path_interp_max)
                 center = start_pos + t * (goal_pos - start_pos)
-                pos = center + np.random.normal(0, path_corridor_radius / 3, size=3)
+                noise_sigma = path_corridor_radius / max(path_noise_scale, 1e-6)
+                pos = center + np.random.normal(0, noise_sigma, size=3)
                 pos = np.clip(pos, min_bounds, max_bounds)
             else:
                 pos = np.random.uniform(min_bounds, max_bounds)
@@ -117,7 +126,6 @@ def generate_scene(scene_id, config, robot_collision_bodies=None, robot_base_pos
 
     # 先生成管道内的障碍物
     path_count = min(min_path_obstacles, num_obstacles)
-    remaining_count = num_obstacles - path_count
     
     for i in range(num_obstacles):
         near_path = (i < path_count)
@@ -149,8 +157,8 @@ def generate_scene(scene_id, config, robot_collision_bodies=None, robot_base_pos
             obstacles.append({'type': 'cylinder', 'pos': pos.tolist(), 'radius': float(r), 'height': float(h)})
 
     # 碰撞检测：确保起终点不在任何障碍物内（含安全间距）
-    collision_clearance = col_cfg.get('clearance', 0.1)
-    max_resample = col_cfg.get('max_resample', 200)
+    collision_clearance = col_cfg.get('clearance')
+    max_resample = col_cfg.get('max_resample')
 
     for _ in range(max_resample):
         in_obs = check_point_in_obstacles(start_pos, obstacles, collision_clearance)
@@ -179,22 +187,9 @@ def generate_scene(scene_id, config, robot_collision_bodies=None, robot_base_pos
     }
     if robot_base_pos is not None:
         data['robot_base_pos'] = list(robot_base_pos)
-    
-    # ---------------------------------------------------------
-    # 【核心修改】自动创建 data/env 文件夹逻辑
-    # ---------------------------------------------------------
+
     output_dir = os.path.join(project_root, env_cfg['output_dir'])
-    
-    # os.makedirs 会递归创建所有不存在的父目录
-    # exist_ok=True 确保如果目录已存在也不会报错
-    if not os.path.exists(output_dir):
-        try:
-            os.makedirs(output_dir, exist_ok=True)
-            print(f"已自动创建: {output_dir}")
-        except OSError as e:
-            print(f"创建目录失败: {e}")
-            sys.exit(1)
-    # ---------------------------------------------------------
+
 
     filename = os.path.join(output_dir, f"env_{scene_id:05d}.json")
     
@@ -204,11 +199,13 @@ def generate_scene(scene_id, config, robot_collision_bodies=None, robot_base_pos
     return filename
 
 if __name__ == "__main__":
+
     default_config = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config', 'env.yaml')
+
     config_file = default_config
     
-    if len(sys.argv) > 2:
-        config_file = sys.argv[2]
+    if len(sys.argv) > 1:
+        config_file = sys.argv[1]
     
     try:
         config = load_config(config_file)
@@ -219,6 +216,8 @@ if __name__ == "__main__":
     if config is None:
         print(f"配置文件为空或格式错误: {config_file}")
         sys.exit(1)
+
+    CONFIG = config
 
     # 设置随机种子
     seed = config.get('random_seed')
@@ -256,25 +255,18 @@ if __name__ == "__main__":
             print("警告: 机械臂碰撞体初始化失败，将跳过机械臂占位碰撞约束")
             print(f"      失败原因: {e}")
 
-    if len(sys.argv) > 1:
-        try:
-            sid = int(sys.argv[1])
-            file_path = generate_scene(sid, config, robot_collision_bodies, robot_base_pos=base_pos)
-            print(f"已生成: {file_path}")
-        except ValueError:
-            print("错误: Scene ID 必须是整数。")
-            sys.exit(1)
-    else:
-        count = config['environment']['default_count']
-        output_dir = config['environment']['output_dir']
+        count = CONFIG['environment']['default_count']
+        output_dir = CONFIG['environment']['output_dir']
+        generation_cfg = CONFIG.get('generation', {})
+        progress_interval = int(generation_cfg.get('progress_interval', 50))
         
         print(f"开始批量生成 {count} 个场景")
         print(f"目标目录: {output_dir}")
-        print(f"环境大小: {config['environment']['workspace_bounds']}")
+        print(f"环境大小: {CONFIG['environment']['workspace_bounds']}")
         
         for i in range(count):
-            generate_scene(i, config, robot_collision_bodies, robot_base_pos=base_pos)
-            if (i + 1) % 50 == 0:
+            generate_scene(i, robot_collision_bodies, robot_base_pos=base_pos)
+            if progress_interval > 0 and (i + 1) % progress_interval == 0:
                 print(f"   进度: {i+1}/{count}")
         
         print(f"所有文件已保存至: {os.path.abspath(output_dir)}")

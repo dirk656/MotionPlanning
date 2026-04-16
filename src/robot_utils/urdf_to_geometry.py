@@ -138,3 +138,14 @@ def get_robot_collision_bodies(world_collisions):
     return bodies
 
 
+def get_ee_link(joints):
+    """沿 fixed 关节链追到运动链末端"""
+    revolute = [j for j in joints if j['type'] in ('revolute', 'continuous')]
+    ee_link = revolute[-1]['child']
+    while True:
+        child_joint = next((j for j in joints if j['parent'] == ee_link and j['type'] == 'fixed'), None)
+        if child_joint is None:
+            break
+        ee_link = child_joint['child']
+    return ee_link
+
