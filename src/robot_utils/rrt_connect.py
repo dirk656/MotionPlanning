@@ -1,6 +1,6 @@
 import numpy as np
 
-from robot_utils.fk_solver import compute_fk
+from robot_utils.compute_kinematic import compute_fk
 from robot_utils.urdf_to_geometry import get_robot_collision_bodies
 from planning_utils.collision_check_utils import (
     points_in_AABB_3d, points_in_ball_3d, points_in_cylinder_3d
@@ -33,11 +33,11 @@ class RRTConnect:
         self.iter_max = iter_max
         self.clearance = clearance
 
+
         self.links = links
         self.joints = joints
         self.base_pos = base_pos
         self.n_samples = collision_samples_per_link
-
         self.revolute_joints = [j for j in joints if j['type'] in ('revolute', 'continuous')]
         self.n_dof = len(self.revolute_joints)
         self.joint_names = [j['name'] for j in self.revolute_joints]
@@ -62,6 +62,7 @@ class RRTConnect:
 
         # 预处理环境障碍物
         boxes, spheres, cylinders = [], [], []
+        
         for obs in obstacles:
             pos = np.array(obs['pos'])
             if obs['type'] == 'box':

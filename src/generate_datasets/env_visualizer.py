@@ -1,6 +1,10 @@
 import json, os, glob, numpy as np
 from os.path import join
 import argparse
+import sys
+
+# 添加 src 目录到系统路径
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
 # ====== 按项目结构调整导入 ======
 from planning_utils.env import Env
