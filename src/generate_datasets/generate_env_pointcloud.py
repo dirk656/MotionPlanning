@@ -162,7 +162,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--input_dir", default=default_input, help="验证通过的场景目录")
     p.add_argument("--output_dir", default=default_output, help="训练数据目录，输出 train.npz/val.npz")
-    p.add_argument("--n_points", type=int, default=4096)
+    p.add_argument("--n_points", type=int, default=2048)
     p.add_argument("--path_rad", type=float, default=float(env_yaml["collision"].get("path_corridor_radius", 0.3)))
     p.add_argument("--start_rad", type=float, default=float(env_yaml["collision"].get("start_radius", 0.2)))
     p.add_argument("--goal_rad", type=float, default=float(env_yaml["collision"].get("goal_radius", 0.2)))

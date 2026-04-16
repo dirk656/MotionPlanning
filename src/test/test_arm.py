@@ -18,7 +18,7 @@ URDF_PATH = os.path.join(_PROJECT_ROOT, "src", "robots", "franka_panda_gem.urdf"
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from robot_utils.urdf_to_geometry import parse_urdf
-from robot_utils.fk_solver import compute_fk
+from robot_utils.compute_fk import compute_fk
 from robot_utils.ik_solver import solve_ik_multi_start
 from robot_utils.rrt_connect import RRTConnect, shortcut_path
 

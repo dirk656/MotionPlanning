@@ -1,0 +1,1680 @@
+2026-04-16 21:36:22,912 - Model - INFO - PARAMETER ...
+2026-04-16 21:36:22,912 - Model - INFO - Namespace(dim=3, model='pointnet2', batch_size=16, epoch=100, learning_rate=0.001, optimizer='Adam', decay_rate=0.0001, npoint=2048, step_size=10, lr_decay=0.7, random_seed=None)
+2026-04-16 21:36:22,912 - Model - INFO - saving to results/model_training/pointnet2_3d
+2026-04-16 21:46:56,506 - Model - INFO - PARAMETER ...
+2026-04-16 21:46:56,507 - Model - INFO - Namespace(dim=3, model='pointnet2', batch_size=16, epoch=1, learning_rate=0.001, optimizer='Adam', decay_rate=0.0001, npoint=2048, step_size=10, lr_decay=0.7, random_seed=None)
+2026-04-16 21:46:56,507 - Model - INFO - saving to results/model_training/pointnet2_3d
+2026-04-16 21:46:56,722 - Model - INFO - The number of training data is: 645
+2026-04-16 21:46:56,722 - Model - INFO - The number of validation data is: 72
+2026-04-16 21:46:56,741 - Model - INFO - No existing model, starting training from scratch...
+2026-04-16 21:46:58,479 - Model - INFO - **** Epoch 1 (1/1) ****
+2026-04-16 21:46:58,479 - Model - INFO - Learning rate:0.001000
+2026-04-16 21:47:14,473 - Model - INFO - Training mean loss: 0.417415
+2026-04-16 21:47:14,473 - Model - INFO - Training accuracy: 1.608240
+2026-04-16 21:47:14,475 - Model - INFO - ---- EPOCH 001 EVALUATION ----
+2026-04-16 21:47:16,060 - Model - INFO - eval mean loss: 0.612287
+2026-04-16 21:47:16,060 - Model - INFO - eval point avg class IoU: 0.525338
+2026-04-16 21:47:16,060 - Model - INFO - eval point accuracy: 1.388654
+2026-04-16 21:47:16,060 - Model - INFO - eval point avg class acc: 0.652122
+2026-04-16 21:47:16,060 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.746 
+class optimal path points weight: 0.672, IoU: 0.305 
+
+2026-04-16 21:47:16,060 - Model - INFO - Eval mean loss: 0.612287
+2026-04-16 21:47:16,060 - Model - INFO - Eval accuracy: 1.388654
+2026-04-16 21:47:16,060 - Model - INFO - Save model...
+2026-04-16 21:47:16,060 - Model - INFO - Saving at results/model_training/pointnet2_3d/checkpoints/best_pointnet2_3d.pth
+2026-04-16 21:47:16,088 - Model - INFO - Saving model....
+2026-04-16 21:47:16,088 - Model - INFO - Best Optimal Path IoU: 0.304626
+2026-04-16 21:49:35,091 - Model - INFO - PARAMETER ...
+2026-04-16 21:49:35,091 - Model - INFO - Namespace(dim=3, model='pointnet2', batch_size=16, epoch=1, learning_rate=0.001, optimizer='Adam', decay_rate=0.0001, npoint=4096, step_size=10, lr_decay=0.7, random_seed=None)
+2026-04-16 21:49:35,091 - Model - INFO - saving to results/model_training/pointnet2_3d
+2026-04-16 21:49:35,290 - Model - INFO - The number of training data is: 645
+2026-04-16 21:49:35,290 - Model - INFO - The number of validation data is: 72
+2026-04-16 21:49:35,305 - Model - INFO - No existing model, starting training from scratch...
+2026-04-16 21:49:35,689 - Model - INFO - **** Epoch 1 (1/1) ****
+2026-04-16 21:49:35,689 - Model - INFO - Learning rate:0.001000
+2026-04-16 21:49:50,823 - Model - INFO - Training mean loss: 0.413000
+2026-04-16 21:49:50,823 - Model - INFO - Training accuracy: 0.808979
+2026-04-16 21:49:50,825 - Model - INFO - ---- EPOCH 001 EVALUATION ----
+2026-04-16 21:49:52,344 - Model - INFO - eval mean loss: 0.570964
+2026-04-16 21:49:52,344 - Model - INFO - eval point avg class IoU: 0.533912
+2026-04-16 21:49:52,344 - Model - INFO - eval point accuracy: 0.697598
+2026-04-16 21:49:52,344 - Model - INFO - eval point avg class acc: 0.658998
+2026-04-16 21:49:52,344 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.749 
+class optimal path points weight: 0.672, IoU: 0.319 
+
+2026-04-16 21:49:52,344 - Model - INFO - Eval mean loss: 0.570964
+2026-04-16 21:49:52,345 - Model - INFO - Eval accuracy: 0.697598
+2026-04-16 21:49:52,345 - Model - INFO - Save model...
+2026-04-16 21:49:52,345 - Model - INFO - Saving at results/model_training/pointnet2_3d/checkpoints/best_pointnet2_3d.pth
+2026-04-16 21:49:52,381 - Model - INFO - Saving model....
+2026-04-16 21:49:52,381 - Model - INFO - Best Optimal Path IoU: 0.319226
+2026-04-16 22:30:07,100 - Model - INFO - PARAMETER ...
+2026-04-16 22:30:07,101 - Model - INFO - Namespace(dim=3, model='pointnet2', batch_size=16, epoch=100, learning_rate=0.001, optimizer='Adam', decay_rate=0.0001, npoint=2048, step_size=10, lr_decay=0.7, random_seed=None)
+2026-04-16 22:30:07,101 - Model - INFO - saving to results/model_training/pointnet2_3d
+2026-04-16 22:30:07,297 - Model - INFO - The number of training data is: 1318
+2026-04-16 22:30:07,297 - Model - INFO - The number of validation data is: 147
+2026-04-16 22:30:07,312 - Model - INFO - No existing model, starting training from scratch...
+2026-04-16 22:30:07,698 - Model - INFO - **** Epoch 1 (1/100) ****
+2026-04-16 22:30:07,698 - Model - INFO - Learning rate:0.001000
+2026-04-16 22:30:32,139 - Model - INFO - Training mean loss: 0.405887
+2026-04-16 22:30:32,139 - Model - INFO - Training accuracy: 0.821734
+2026-04-16 22:30:32,142 - Model - INFO - ---- EPOCH 001 EVALUATION ----
+2026-04-16 22:30:34,506 - Model - INFO - eval mean loss: 0.387894
+2026-04-16 22:30:34,506 - Model - INFO - eval point avg class IoU: 0.670181
+2026-04-16 22:30:34,506 - Model - INFO - eval point accuracy: 0.767920
+2026-04-16 22:30:34,506 - Model - INFO - eval point avg class acc: 0.775164
+2026-04-16 22:30:34,506 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.796 
+class optimal path points weight: 0.672, IoU: 0.545 
+
+2026-04-16 22:30:34,506 - Model - INFO - Eval mean loss: 0.387894
+2026-04-16 22:30:34,506 - Model - INFO - Eval accuracy: 0.767920
+2026-04-16 22:30:34,506 - Model - INFO - Save model...
+2026-04-16 22:30:34,506 - Model - INFO - Saving at results/model_training/pointnet2_3d/checkpoints/best_pointnet2_3d.pth
+2026-04-16 22:30:34,544 - Model - INFO - Saving model....
+2026-04-16 22:30:34,545 - Model - INFO - Best Optimal Path IoU: 0.544643
+2026-04-16 22:30:34,545 - Model - INFO - **** Epoch 2 (2/100) ****
+2026-04-16 22:30:34,545 - Model - INFO - Learning rate:0.001000
+2026-04-16 22:30:58,713 - Model - INFO - Training mean loss: 0.388208
+2026-04-16 22:30:58,713 - Model - INFO - Training accuracy: 0.830616
+2026-04-16 22:30:58,717 - Model - INFO - ---- EPOCH 002 EVALUATION ----
+2026-04-16 22:31:01,036 - Model - INFO - eval mean loss: 0.385583
+2026-04-16 22:31:01,037 - Model - INFO - eval point avg class IoU: 0.682528
+2026-04-16 22:31:01,037 - Model - INFO - eval point accuracy: 0.769394
+2026-04-16 22:31:01,037 - Model - INFO - eval point avg class acc: 0.793365
+2026-04-16 22:31:01,037 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.792 
+class optimal path points weight: 0.672, IoU: 0.573 
+
+2026-04-16 22:31:01,037 - Model - INFO - Eval mean loss: 0.385583
+2026-04-16 22:31:01,037 - Model - INFO - Eval accuracy: 0.769394
+2026-04-16 22:31:01,037 - Model - INFO - Save model...
+2026-04-16 22:31:01,037 - Model - INFO - Saving at results/model_training/pointnet2_3d/checkpoints/best_pointnet2_3d.pth
+2026-04-16 22:31:01,068 - Model - INFO - Saving model....
+2026-04-16 22:31:01,068 - Model - INFO - Best Optimal Path IoU: 0.572970
+2026-04-16 22:31:01,068 - Model - INFO - **** Epoch 3 (3/100) ****
+2026-04-16 22:31:01,068 - Model - INFO - Learning rate:0.001000
+2026-04-16 22:31:25,159 - Model - INFO - Training mean loss: 0.382894
+2026-04-16 22:31:25,159 - Model - INFO - Training accuracy: 0.831800
+2026-04-16 22:31:25,163 - Model - INFO - ---- EPOCH 003 EVALUATION ----
+2026-04-16 22:31:27,473 - Model - INFO - eval mean loss: 0.388272
+2026-04-16 22:31:27,473 - Model - INFO - eval point avg class IoU: 0.676568
+2026-04-16 22:31:27,473 - Model - INFO - eval point accuracy: 0.769669
+2026-04-16 22:31:27,473 - Model - INFO - eval point avg class acc: 0.782563
+2026-04-16 22:31:27,473 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.796 
+class optimal path points weight: 0.672, IoU: 0.557 
+
+2026-04-16 22:31:27,473 - Model - INFO - Eval mean loss: 0.388272
+2026-04-16 22:31:27,473 - Model - INFO - Eval accuracy: 0.769669
+2026-04-16 22:31:27,473 - Model - INFO - Best Optimal Path IoU: 0.572970
+2026-04-16 22:31:27,473 - Model - INFO - **** Epoch 4 (4/100) ****
+2026-04-16 22:31:27,473 - Model - INFO - Learning rate:0.001000
+2026-04-16 22:31:51,603 - Model - INFO - Training mean loss: 0.380406
+2026-04-16 22:31:51,603 - Model - INFO - Training accuracy: 0.834561
+2026-04-16 22:31:51,607 - Model - INFO - ---- EPOCH 004 EVALUATION ----
+2026-04-16 22:31:53,928 - Model - INFO - eval mean loss: 0.395294
+2026-04-16 22:31:53,928 - Model - INFO - eval point avg class IoU: 0.674653
+2026-04-16 22:31:53,928 - Model - INFO - eval point accuracy: 0.759869
+2026-04-16 22:31:53,928 - Model - INFO - eval point avg class acc: 0.798092
+2026-04-16 22:31:53,928 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.774 
+class optimal path points weight: 0.672, IoU: 0.575 
+
+2026-04-16 22:31:53,928 - Model - INFO - Eval mean loss: 0.395294
+2026-04-16 22:31:53,928 - Model - INFO - Eval accuracy: 0.759869
+2026-04-16 22:31:53,928 - Model - INFO - Save model...
+2026-04-16 22:31:53,928 - Model - INFO - Saving at results/model_training/pointnet2_3d/checkpoints/best_pointnet2_3d.pth
+2026-04-16 22:31:53,964 - Model - INFO - Saving model....
+2026-04-16 22:31:53,965 - Model - INFO - Best Optimal Path IoU: 0.575077
+2026-04-16 22:31:53,965 - Model - INFO - **** Epoch 5 (5/100) ****
+2026-04-16 22:31:53,965 - Model - INFO - Learning rate:0.001000
+2026-04-16 22:32:18,248 - Model - INFO - Training mean loss: 0.380249
+2026-04-16 22:32:18,248 - Model - INFO - Training accuracy: 0.834055
+2026-04-16 22:32:18,252 - Model - INFO - ---- EPOCH 005 EVALUATION ----
+2026-04-16 22:32:20,431 - Model - INFO - eval mean loss: 0.378235
+2026-04-16 22:32:20,431 - Model - INFO - eval point avg class IoU: 0.690125
+2026-04-16 22:32:20,431 - Model - INFO - eval point accuracy: 0.775339
+2026-04-16 22:32:20,431 - Model - INFO - eval point avg class acc: 0.795496
+2026-04-16 22:32:20,431 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.801 
+class optimal path points weight: 0.672, IoU: 0.579 
+
+2026-04-16 22:32:20,431 - Model - INFO - Eval mean loss: 0.378235
+2026-04-16 22:32:20,431 - Model - INFO - Eval accuracy: 0.775339
+2026-04-16 22:32:20,431 - Model - INFO - Save model...
+2026-04-16 22:32:20,431 - Model - INFO - Saving at results/model_training/pointnet2_3d/checkpoints/best_pointnet2_3d.pth
+2026-04-16 22:32:20,462 - Model - INFO - Saving model....
+2026-04-16 22:32:20,462 - Model - INFO - Best Optimal Path IoU: 0.579018
+2026-04-16 22:32:20,462 - Model - INFO - **** Epoch 6 (6/100) ****
+2026-04-16 22:32:20,462 - Model - INFO - Learning rate:0.001000
+2026-04-16 22:32:43,506 - Model - INFO - Training mean loss: 0.377608
+2026-04-16 22:32:43,506 - Model - INFO - Training accuracy: 0.834748
+2026-04-16 22:32:43,511 - Model - INFO - ---- EPOCH 006 EVALUATION ----
+2026-04-16 22:32:45,683 - Model - INFO - eval mean loss: 0.375475
+2026-04-16 22:32:45,684 - Model - INFO - eval point avg class IoU: 0.690907
+2026-04-16 22:32:45,684 - Model - INFO - eval point accuracy: 0.772510
+2026-04-16 22:32:45,684 - Model - INFO - eval point avg class acc: 0.802737
+2026-04-16 22:32:45,684 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.794 
+class optimal path points weight: 0.672, IoU: 0.588 
+
+2026-04-16 22:32:45,684 - Model - INFO - Eval mean loss: 0.375475
+2026-04-16 22:32:45,684 - Model - INFO - Eval accuracy: 0.772510
+2026-04-16 22:32:45,684 - Model - INFO - Save model...
+2026-04-16 22:32:45,684 - Model - INFO - Saving at results/model_training/pointnet2_3d/checkpoints/best_pointnet2_3d.pth
+2026-04-16 22:32:45,762 - Model - INFO - Saving model....
+2026-04-16 22:32:45,762 - Model - INFO - Best Optimal Path IoU: 0.587700
+2026-04-16 22:32:45,762 - Model - INFO - **** Epoch 7 (7/100) ****
+2026-04-16 22:32:45,762 - Model - INFO - Learning rate:0.001000
+2026-04-16 22:33:09,593 - Model - INFO - Training mean loss: 0.378703
+2026-04-16 22:33:09,594 - Model - INFO - Training accuracy: 0.834426
+2026-04-16 22:33:09,598 - Model - INFO - ---- EPOCH 007 EVALUATION ----
+2026-04-16 22:33:11,819 - Model - INFO - eval mean loss: 0.384084
+2026-04-16 22:33:11,819 - Model - INFO - eval point avg class IoU: 0.685863
+2026-04-16 22:33:11,819 - Model - INFO - eval point accuracy: 0.771472
+2026-04-16 22:33:11,819 - Model - INFO - eval point avg class acc: 0.795369
+2026-04-16 22:33:11,819 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.795 
+class optimal path points weight: 0.672, IoU: 0.577 
+
+2026-04-16 22:33:11,819 - Model - INFO - Eval mean loss: 0.384084
+2026-04-16 22:33:11,819 - Model - INFO - Eval accuracy: 0.771472
+2026-04-16 22:33:11,819 - Model - INFO - Best Optimal Path IoU: 0.587700
+2026-04-16 22:33:11,819 - Model - INFO - **** Epoch 8 (8/100) ****
+2026-04-16 22:33:11,819 - Model - INFO - Learning rate:0.001000
+2026-04-16 22:33:34,392 - Model - INFO - Training mean loss: 0.378452
+2026-04-16 22:33:34,392 - Model - INFO - Training accuracy: 0.835082
+2026-04-16 22:33:34,396 - Model - INFO - ---- EPOCH 008 EVALUATION ----
+2026-04-16 22:33:36,559 - Model - INFO - eval mean loss: 0.379881
+2026-04-16 22:33:36,559 - Model - INFO - eval point avg class IoU: 0.685078
+2026-04-16 22:33:36,559 - Model - INFO - eval point accuracy: 0.773535
+2026-04-16 22:33:36,559 - Model - INFO - eval point avg class acc: 0.790083
+2026-04-16 22:33:36,559 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.800 
+class optimal path points weight: 0.672, IoU: 0.570 
+
+2026-04-16 22:33:36,559 - Model - INFO - Eval mean loss: 0.379881
+2026-04-16 22:33:36,559 - Model - INFO - Eval accuracy: 0.773535
+2026-04-16 22:33:36,559 - Model - INFO - Best Optimal Path IoU: 0.587700
+2026-04-16 22:33:36,559 - Model - INFO - **** Epoch 9 (9/100) ****
+2026-04-16 22:33:36,559 - Model - INFO - Learning rate:0.001000
+2026-04-16 22:33:59,346 - Model - INFO - Training mean loss: 0.377601
+2026-04-16 22:33:59,346 - Model - INFO - Training accuracy: 0.834217
+2026-04-16 22:33:59,350 - Model - INFO - ---- EPOCH 009 EVALUATION ----
+2026-04-16 22:34:01,724 - Model - INFO - eval mean loss: 0.364924
+2026-04-16 22:34:01,724 - Model - INFO - eval point avg class IoU: 0.698560
+2026-04-16 22:34:01,725 - Model - INFO - eval point accuracy: 0.776593
+2026-04-16 22:34:01,725 - Model - INFO - eval point avg class acc: 0.808717
+2026-04-16 22:34:01,725 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.799 
+class optimal path points weight: 0.672, IoU: 0.598 
+
+2026-04-16 22:34:01,725 - Model - INFO - Eval mean loss: 0.364924
+2026-04-16 22:34:01,725 - Model - INFO - Eval accuracy: 0.776593
+2026-04-16 22:34:01,725 - Model - INFO - Save model...
+2026-04-16 22:34:01,725 - Model - INFO - Saving at results/model_training/pointnet2_3d/checkpoints/best_pointnet2_3d.pth
+2026-04-16 22:34:01,758 - Model - INFO - Saving model....
+2026-04-16 22:34:01,758 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:34:01,758 - Model - INFO - **** Epoch 10 (10/100) ****
+2026-04-16 22:34:01,758 - Model - INFO - Learning rate:0.001000
+2026-04-16 22:34:24,495 - Model - INFO - Training mean loss: 0.377037
+2026-04-16 22:34:24,495 - Model - INFO - Training accuracy: 0.834915
+2026-04-16 22:34:24,499 - Model - INFO - ---- EPOCH 010 EVALUATION ----
+2026-04-16 22:34:26,678 - Model - INFO - eval mean loss: 0.381375
+2026-04-16 22:34:26,678 - Model - INFO - eval point avg class IoU: 0.682980
+2026-04-16 22:34:26,678 - Model - INFO - eval point accuracy: 0.771103
+2026-04-16 22:34:26,678 - Model - INFO - eval point avg class acc: 0.790912
+2026-04-16 22:34:26,678 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.796 
+class optimal path points weight: 0.672, IoU: 0.570 
+
+2026-04-16 22:34:26,678 - Model - INFO - Eval mean loss: 0.381375
+2026-04-16 22:34:26,679 - Model - INFO - Eval accuracy: 0.771103
+2026-04-16 22:34:26,679 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:34:26,679 - Model - INFO - **** Epoch 11 (11/100) ****
+2026-04-16 22:34:26,679 - Model - INFO - Learning rate:0.000700
+2026-04-16 22:34:49,323 - Model - INFO - Training mean loss: 0.375047
+2026-04-16 22:34:49,324 - Model - INFO - Training accuracy: 0.835373
+2026-04-16 22:34:49,328 - Model - INFO - ---- EPOCH 011 EVALUATION ----
+2026-04-16 22:34:51,490 - Model - INFO - eval mean loss: 0.379374
+2026-04-16 22:34:51,490 - Model - INFO - eval point avg class IoU: 0.689682
+2026-04-16 22:34:51,490 - Model - INFO - eval point accuracy: 0.772980
+2026-04-16 22:34:51,491 - Model - INFO - eval point avg class acc: 0.799396
+2026-04-16 22:34:51,491 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.796 
+class optimal path points weight: 0.672, IoU: 0.583 
+
+2026-04-16 22:34:51,491 - Model - INFO - Eval mean loss: 0.379374
+2026-04-16 22:34:51,491 - Model - INFO - Eval accuracy: 0.772980
+2026-04-16 22:34:51,491 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:34:51,491 - Model - INFO - **** Epoch 12 (12/100) ****
+2026-04-16 22:34:51,491 - Model - INFO - Learning rate:0.000700
+2026-04-16 22:35:15,168 - Model - INFO - Training mean loss: 0.374927
+2026-04-16 22:35:15,168 - Model - INFO - Training accuracy: 0.835291
+2026-04-16 22:35:15,174 - Model - INFO - ---- EPOCH 012 EVALUATION ----
+2026-04-16 22:35:17,483 - Model - INFO - eval mean loss: 0.379868
+2026-04-16 22:35:17,483 - Model - INFO - eval point avg class IoU: 0.688901
+2026-04-16 22:35:17,483 - Model - INFO - eval point accuracy: 0.774045
+2026-04-16 22:35:17,483 - Model - INFO - eval point avg class acc: 0.795819
+2026-04-16 22:35:17,483 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.799 
+class optimal path points weight: 0.672, IoU: 0.579 
+
+2026-04-16 22:35:17,483 - Model - INFO - Eval mean loss: 0.379868
+2026-04-16 22:35:17,483 - Model - INFO - Eval accuracy: 0.774045
+2026-04-16 22:35:17,483 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:35:17,483 - Model - INFO - **** Epoch 13 (13/100) ****
+2026-04-16 22:35:17,483 - Model - INFO - Learning rate:0.000700
+2026-04-16 22:35:40,691 - Model - INFO - Training mean loss: 0.375133
+2026-04-16 22:35:40,691 - Model - INFO - Training accuracy: 0.835693
+2026-04-16 22:35:40,700 - Model - INFO - ---- EPOCH 013 EVALUATION ----
+2026-04-16 22:35:42,891 - Model - INFO - eval mean loss: 0.375512
+2026-04-16 22:35:42,892 - Model - INFO - eval point avg class IoU: 0.691682
+2026-04-16 22:35:42,892 - Model - INFO - eval point accuracy: 0.773779
+2026-04-16 22:35:42,892 - Model - INFO - eval point avg class acc: 0.801504
+2026-04-16 22:35:42,892 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.797 
+class optimal path points weight: 0.672, IoU: 0.587 
+
+2026-04-16 22:35:42,892 - Model - INFO - Eval mean loss: 0.375512
+2026-04-16 22:35:42,892 - Model - INFO - Eval accuracy: 0.773779
+2026-04-16 22:35:42,892 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:35:42,892 - Model - INFO - **** Epoch 14 (14/100) ****
+2026-04-16 22:35:42,892 - Model - INFO - Learning rate:0.000700
+2026-04-16 22:36:05,628 - Model - INFO - Training mean loss: 0.374621
+2026-04-16 22:36:05,628 - Model - INFO - Training accuracy: 0.835577
+2026-04-16 22:36:05,632 - Model - INFO - ---- EPOCH 014 EVALUATION ----
+2026-04-16 22:36:07,817 - Model - INFO - eval mean loss: 0.373863
+2026-04-16 22:36:07,818 - Model - INFO - eval point avg class IoU: 0.694921
+2026-04-16 22:36:07,818 - Model - INFO - eval point accuracy: 0.774780
+2026-04-16 22:36:07,818 - Model - INFO - eval point avg class acc: 0.805598
+2026-04-16 22:36:07,818 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.797 
+class optimal path points weight: 0.672, IoU: 0.593 
+
+2026-04-16 22:36:07,818 - Model - INFO - Eval mean loss: 0.373863
+2026-04-16 22:36:07,818 - Model - INFO - Eval accuracy: 0.774780
+2026-04-16 22:36:07,818 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:36:07,818 - Model - INFO - **** Epoch 15 (15/100) ****
+2026-04-16 22:36:07,818 - Model - INFO - Learning rate:0.000700
+2026-04-16 22:36:30,632 - Model - INFO - Training mean loss: 0.374135
+2026-04-16 22:36:30,632 - Model - INFO - Training accuracy: 0.835735
+2026-04-16 22:36:30,636 - Model - INFO - ---- EPOCH 015 EVALUATION ----
+2026-04-16 22:36:32,783 - Model - INFO - eval mean loss: 0.374662
+2026-04-16 22:36:32,783 - Model - INFO - eval point avg class IoU: 0.687559
+2026-04-16 22:36:32,783 - Model - INFO - eval point accuracy: 0.774216
+2026-04-16 22:36:32,783 - Model - INFO - eval point avg class acc: 0.793115
+2026-04-16 22:36:32,783 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.800 
+class optimal path points weight: 0.672, IoU: 0.575 
+
+2026-04-16 22:36:32,783 - Model - INFO - Eval mean loss: 0.374662
+2026-04-16 22:36:32,783 - Model - INFO - Eval accuracy: 0.774216
+2026-04-16 22:36:32,783 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:36:32,783 - Model - INFO - **** Epoch 16 (16/100) ****
+2026-04-16 22:36:32,783 - Model - INFO - Learning rate:0.000700
+2026-04-16 22:36:56,110 - Model - INFO - Training mean loss: 0.375167
+2026-04-16 22:36:56,110 - Model - INFO - Training accuracy: 0.835681
+2026-04-16 22:36:56,114 - Model - INFO - ---- EPOCH 016 EVALUATION ----
+2026-04-16 22:36:58,284 - Model - INFO - eval mean loss: 0.375669
+2026-04-16 22:36:58,284 - Model - INFO - eval point avg class IoU: 0.692596
+2026-04-16 22:36:58,284 - Model - INFO - eval point accuracy: 0.775537
+2026-04-16 22:36:58,284 - Model - INFO - eval point avg class acc: 0.799566
+2026-04-16 22:36:58,284 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.800 
+class optimal path points weight: 0.672, IoU: 0.585 
+
+2026-04-16 22:36:58,284 - Model - INFO - Eval mean loss: 0.375669
+2026-04-16 22:36:58,284 - Model - INFO - Eval accuracy: 0.775537
+2026-04-16 22:36:58,284 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:36:58,284 - Model - INFO - **** Epoch 17 (17/100) ****
+2026-04-16 22:36:58,284 - Model - INFO - Learning rate:0.000700
+2026-04-16 22:37:21,163 - Model - INFO - Training mean loss: 0.376153
+2026-04-16 22:37:21,163 - Model - INFO - Training accuracy: 0.835706
+2026-04-16 22:37:21,167 - Model - INFO - ---- EPOCH 017 EVALUATION ----
+2026-04-16 22:37:23,350 - Model - INFO - eval mean loss: 0.380858
+2026-04-16 22:37:23,350 - Model - INFO - eval point avg class IoU: 0.678626
+2026-04-16 22:37:23,350 - Model - INFO - eval point accuracy: 0.773260
+2026-04-16 22:37:23,350 - Model - INFO - eval point avg class acc: 0.780054
+2026-04-16 22:37:23,350 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.803 
+class optimal path points weight: 0.672, IoU: 0.554 
+
+2026-04-16 22:37:23,350 - Model - INFO - Eval mean loss: 0.380858
+2026-04-16 22:37:23,350 - Model - INFO - Eval accuracy: 0.773260
+2026-04-16 22:37:23,350 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:37:23,350 - Model - INFO - **** Epoch 18 (18/100) ****
+2026-04-16 22:37:23,350 - Model - INFO - Learning rate:0.000700
+2026-04-16 22:37:47,188 - Model - INFO - Training mean loss: 0.373862
+2026-04-16 22:37:47,189 - Model - INFO - Training accuracy: 0.836229
+2026-04-16 22:37:47,193 - Model - INFO - ---- EPOCH 018 EVALUATION ----
+2026-04-16 22:37:49,361 - Model - INFO - eval mean loss: 0.375612
+2026-04-16 22:37:49,361 - Model - INFO - eval point avg class IoU: 0.690600
+2026-04-16 22:37:49,361 - Model - INFO - eval point accuracy: 0.773935
+2026-04-16 22:37:49,361 - Model - INFO - eval point avg class acc: 0.799144
+2026-04-16 22:37:49,361 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.798 
+class optimal path points weight: 0.672, IoU: 0.583 
+
+2026-04-16 22:37:49,361 - Model - INFO - Eval mean loss: 0.375612
+2026-04-16 22:37:49,361 - Model - INFO - Eval accuracy: 0.773935
+2026-04-16 22:37:49,361 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:37:49,361 - Model - INFO - **** Epoch 19 (19/100) ****
+2026-04-16 22:37:49,361 - Model - INFO - Learning rate:0.000700
+2026-04-16 22:38:12,578 - Model - INFO - Training mean loss: 0.372487
+2026-04-16 22:38:12,578 - Model - INFO - Training accuracy: 0.836360
+2026-04-16 22:38:12,582 - Model - INFO - ---- EPOCH 019 EVALUATION ----
+2026-04-16 22:38:14,758 - Model - INFO - eval mean loss: 0.378014
+2026-04-16 22:38:14,758 - Model - INFO - eval point avg class IoU: 0.689846
+2026-04-16 22:38:14,758 - Model - INFO - eval point accuracy: 0.777145
+2026-04-16 22:38:14,758 - Model - INFO - eval point avg class acc: 0.791659
+2026-04-16 22:38:14,758 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.574 
+
+2026-04-16 22:38:14,758 - Model - INFO - Eval mean loss: 0.378014
+2026-04-16 22:38:14,758 - Model - INFO - Eval accuracy: 0.777145
+2026-04-16 22:38:14,758 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:38:14,758 - Model - INFO - **** Epoch 20 (20/100) ****
+2026-04-16 22:38:14,758 - Model - INFO - Learning rate:0.000700
+2026-04-16 22:38:38,716 - Model - INFO - Training mean loss: 0.374961
+2026-04-16 22:38:38,716 - Model - INFO - Training accuracy: 0.835884
+2026-04-16 22:38:38,720 - Model - INFO - ---- EPOCH 020 EVALUATION ----
+2026-04-16 22:38:41,094 - Model - INFO - eval mean loss: 0.374979
+2026-04-16 22:38:41,094 - Model - INFO - eval point avg class IoU: 0.692225
+2026-04-16 22:38:41,094 - Model - INFO - eval point accuracy: 0.772577
+2026-04-16 22:38:41,094 - Model - INFO - eval point avg class acc: 0.805190
+2026-04-16 22:38:41,094 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.793 
+class optimal path points weight: 0.672, IoU: 0.591 
+
+2026-04-16 22:38:41,094 - Model - INFO - Eval mean loss: 0.374979
+2026-04-16 22:38:41,094 - Model - INFO - Eval accuracy: 0.772577
+2026-04-16 22:38:41,094 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:38:41,094 - Model - INFO - **** Epoch 21 (21/100) ****
+2026-04-16 22:38:41,094 - Model - INFO - Learning rate:0.000490
+2026-04-16 22:39:06,351 - Model - INFO - Training mean loss: 0.371980
+2026-04-16 22:39:06,351 - Model - INFO - Training accuracy: 0.837222
+2026-04-16 22:39:06,355 - Model - INFO - ---- EPOCH 021 EVALUATION ----
+2026-04-16 22:39:08,639 - Model - INFO - eval mean loss: 0.376134
+2026-04-16 22:39:08,639 - Model - INFO - eval point avg class IoU: 0.689118
+2026-04-16 22:39:08,639 - Model - INFO - eval point accuracy: 0.771753
+2026-04-16 22:39:08,639 - Model - INFO - eval point avg class acc: 0.800902
+2026-04-16 22:39:08,639 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.793 
+class optimal path points weight: 0.672, IoU: 0.585 
+
+2026-04-16 22:39:08,639 - Model - INFO - Eval mean loss: 0.376134
+2026-04-16 22:39:08,639 - Model - INFO - Eval accuracy: 0.771753
+2026-04-16 22:39:08,639 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:39:08,639 - Model - INFO - **** Epoch 22 (22/100) ****
+2026-04-16 22:39:08,639 - Model - INFO - Learning rate:0.000490
+2026-04-16 22:39:31,814 - Model - INFO - Training mean loss: 0.371651
+2026-04-16 22:39:31,814 - Model - INFO - Training accuracy: 0.836875
+2026-04-16 22:39:31,818 - Model - INFO - ---- EPOCH 022 EVALUATION ----
+2026-04-16 22:39:33,982 - Model - INFO - eval mean loss: 0.382770
+2026-04-16 22:39:33,982 - Model - INFO - eval point avg class IoU: 0.679397
+2026-04-16 22:39:33,982 - Model - INFO - eval point accuracy: 0.774005
+2026-04-16 22:39:33,982 - Model - INFO - eval point avg class acc: 0.780089
+2026-04-16 22:39:33,982 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.804 
+class optimal path points weight: 0.672, IoU: 0.555 
+
+2026-04-16 22:39:33,982 - Model - INFO - Eval mean loss: 0.382770
+2026-04-16 22:39:33,982 - Model - INFO - Eval accuracy: 0.774005
+2026-04-16 22:39:33,982 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:39:33,982 - Model - INFO - **** Epoch 23 (23/100) ****
+2026-04-16 22:39:33,982 - Model - INFO - Learning rate:0.000490
+2026-04-16 22:39:59,930 - Model - INFO - Training mean loss: 0.370674
+2026-04-16 22:39:59,930 - Model - INFO - Training accuracy: 0.836674
+2026-04-16 22:39:59,934 - Model - INFO - ---- EPOCH 023 EVALUATION ----
+2026-04-16 22:40:02,350 - Model - INFO - eval mean loss: 0.379143
+2026-04-16 22:40:02,350 - Model - INFO - eval point avg class IoU: 0.682765
+2026-04-16 22:40:02,350 - Model - INFO - eval point accuracy: 0.775226
+2026-04-16 22:40:02,350 - Model - INFO - eval point avg class acc: 0.783408
+2026-04-16 22:40:02,350 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.561 
+
+2026-04-16 22:40:02,350 - Model - INFO - Eval mean loss: 0.379143
+2026-04-16 22:40:02,350 - Model - INFO - Eval accuracy: 0.775226
+2026-04-16 22:40:02,350 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:40:02,350 - Model - INFO - **** Epoch 24 (24/100) ****
+2026-04-16 22:40:02,350 - Model - INFO - Learning rate:0.000490
+2026-04-16 22:40:25,856 - Model - INFO - Training mean loss: 0.370166
+2026-04-16 22:40:25,856 - Model - INFO - Training accuracy: 0.837043
+2026-04-16 22:40:25,861 - Model - INFO - ---- EPOCH 024 EVALUATION ----
+2026-04-16 22:40:28,110 - Model - INFO - eval mean loss: 0.379527
+2026-04-16 22:40:28,110 - Model - INFO - eval point avg class IoU: 0.688186
+2026-04-16 22:40:28,110 - Model - INFO - eval point accuracy: 0.769870
+2026-04-16 22:40:28,110 - Model - INFO - eval point avg class acc: 0.803188
+2026-04-16 22:40:28,110 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.789 
+class optimal path points weight: 0.672, IoU: 0.587 
+
+2026-04-16 22:40:28,111 - Model - INFO - Eval mean loss: 0.379527
+2026-04-16 22:40:28,111 - Model - INFO - Eval accuracy: 0.769870
+2026-04-16 22:40:28,111 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:40:28,111 - Model - INFO - **** Epoch 25 (25/100) ****
+2026-04-16 22:40:28,111 - Model - INFO - Learning rate:0.000490
+2026-04-16 22:40:54,098 - Model - INFO - Training mean loss: 0.371710
+2026-04-16 22:40:54,098 - Model - INFO - Training accuracy: 0.837075
+2026-04-16 22:40:54,101 - Model - INFO - ---- EPOCH 025 EVALUATION ----
+2026-04-16 22:40:56,489 - Model - INFO - eval mean loss: 0.389933
+2026-04-16 22:40:56,490 - Model - INFO - eval point avg class IoU: 0.681181
+2026-04-16 22:40:56,490 - Model - INFO - eval point accuracy: 0.773239
+2026-04-16 22:40:56,490 - Model - INFO - eval point avg class acc: 0.784130
+2026-04-16 22:40:56,490 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.801 
+class optimal path points weight: 0.672, IoU: 0.561 
+
+2026-04-16 22:40:56,490 - Model - INFO - Eval mean loss: 0.389933
+2026-04-16 22:40:56,490 - Model - INFO - Eval accuracy: 0.773239
+2026-04-16 22:40:56,490 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:40:56,490 - Model - INFO - **** Epoch 26 (26/100) ****
+2026-04-16 22:40:56,490 - Model - INFO - Learning rate:0.000490
+2026-04-16 22:41:22,238 - Model - INFO - Training mean loss: 0.372151
+2026-04-16 22:41:22,238 - Model - INFO - Training accuracy: 0.837535
+2026-04-16 22:41:22,242 - Model - INFO - ---- EPOCH 026 EVALUATION ----
+2026-04-16 22:41:24,735 - Model - INFO - eval mean loss: 0.369957
+2026-04-16 22:41:24,735 - Model - INFO - eval point avg class IoU: 0.695341
+2026-04-16 22:41:24,735 - Model - INFO - eval point accuracy: 0.778769
+2026-04-16 22:41:24,735 - Model - INFO - eval point avg class acc: 0.798087
+2026-04-16 22:41:24,735 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.806 
+class optimal path points weight: 0.672, IoU: 0.585 
+
+2026-04-16 22:41:24,735 - Model - INFO - Eval mean loss: 0.369957
+2026-04-16 22:41:24,735 - Model - INFO - Eval accuracy: 0.778769
+2026-04-16 22:41:24,735 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:41:24,735 - Model - INFO - **** Epoch 27 (27/100) ****
+2026-04-16 22:41:24,735 - Model - INFO - Learning rate:0.000490
+2026-04-16 22:41:49,484 - Model - INFO - Training mean loss: 0.371631
+2026-04-16 22:41:49,484 - Model - INFO - Training accuracy: 0.837291
+2026-04-16 22:41:49,488 - Model - INFO - ---- EPOCH 027 EVALUATION ----
+2026-04-16 22:41:52,256 - Model - INFO - eval mean loss: 0.388346
+2026-04-16 22:41:52,256 - Model - INFO - eval point avg class IoU: 0.673646
+2026-04-16 22:41:52,256 - Model - INFO - eval point accuracy: 0.772409
+2026-04-16 22:41:52,256 - Model - INFO - eval point avg class acc: 0.773805
+2026-04-16 22:41:52,256 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.803 
+class optimal path points weight: 0.672, IoU: 0.544 
+
+2026-04-16 22:41:52,256 - Model - INFO - Eval mean loss: 0.388346
+2026-04-16 22:41:52,256 - Model - INFO - Eval accuracy: 0.772409
+2026-04-16 22:41:52,256 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:41:52,256 - Model - INFO - **** Epoch 28 (28/100) ****
+2026-04-16 22:41:52,256 - Model - INFO - Learning rate:0.000490
+2026-04-16 22:42:18,072 - Model - INFO - Training mean loss: 0.371506
+2026-04-16 22:42:18,073 - Model - INFO - Training accuracy: 0.837263
+2026-04-16 22:42:18,077 - Model - INFO - ---- EPOCH 028 EVALUATION ----
+2026-04-16 22:42:20,262 - Model - INFO - eval mean loss: 0.373774
+2026-04-16 22:42:20,262 - Model - INFO - eval point avg class IoU: 0.689208
+2026-04-16 22:42:20,262 - Model - INFO - eval point accuracy: 0.773987
+2026-04-16 22:42:20,262 - Model - INFO - eval point avg class acc: 0.796486
+2026-04-16 22:42:20,262 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.799 
+class optimal path points weight: 0.672, IoU: 0.580 
+
+2026-04-16 22:42:20,262 - Model - INFO - Eval mean loss: 0.373774
+2026-04-16 22:42:20,262 - Model - INFO - Eval accuracy: 0.773987
+2026-04-16 22:42:20,262 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:42:20,262 - Model - INFO - **** Epoch 29 (29/100) ****
+2026-04-16 22:42:20,262 - Model - INFO - Learning rate:0.000490
+2026-04-16 22:42:45,558 - Model - INFO - Training mean loss: 0.370123
+2026-04-16 22:42:45,558 - Model - INFO - Training accuracy: 0.837281
+2026-04-16 22:42:45,562 - Model - INFO - ---- EPOCH 029 EVALUATION ----
+2026-04-16 22:42:47,868 - Model - INFO - eval mean loss: 0.376750
+2026-04-16 22:42:47,868 - Model - INFO - eval point avg class IoU: 0.688021
+2026-04-16 22:42:47,868 - Model - INFO - eval point accuracy: 0.777469
+2026-04-16 22:42:47,868 - Model - INFO - eval point avg class acc: 0.788084
+2026-04-16 22:42:47,868 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.807 
+class optimal path points weight: 0.672, IoU: 0.569 
+
+2026-04-16 22:42:47,868 - Model - INFO - Eval mean loss: 0.376750
+2026-04-16 22:42:47,868 - Model - INFO - Eval accuracy: 0.777469
+2026-04-16 22:42:47,868 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:42:47,868 - Model - INFO - **** Epoch 30 (30/100) ****
+2026-04-16 22:42:47,868 - Model - INFO - Learning rate:0.000490
+2026-04-16 22:43:12,094 - Model - INFO - Training mean loss: 0.371042
+2026-04-16 22:43:12,094 - Model - INFO - Training accuracy: 0.837224
+2026-04-16 22:43:12,099 - Model - INFO - ---- EPOCH 030 EVALUATION ----
+2026-04-16 22:43:14,259 - Model - INFO - eval mean loss: 0.373960
+2026-04-16 22:43:14,259 - Model - INFO - eval point avg class IoU: 0.685753
+2026-04-16 22:43:14,259 - Model - INFO - eval point accuracy: 0.776450
+2026-04-16 22:43:14,259 - Model - INFO - eval point avg class acc: 0.786148
+2026-04-16 22:43:14,259 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.806 
+class optimal path points weight: 0.672, IoU: 0.565 
+
+2026-04-16 22:43:14,259 - Model - INFO - Eval mean loss: 0.373960
+2026-04-16 22:43:14,259 - Model - INFO - Eval accuracy: 0.776450
+2026-04-16 22:43:14,260 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:43:14,260 - Model - INFO - **** Epoch 31 (31/100) ****
+2026-04-16 22:43:14,260 - Model - INFO - Learning rate:0.000343
+2026-04-16 22:43:40,338 - Model - INFO - Training mean loss: 0.368613
+2026-04-16 22:43:40,338 - Model - INFO - Training accuracy: 0.838157
+2026-04-16 22:43:40,344 - Model - INFO - ---- EPOCH 031 EVALUATION ----
+2026-04-16 22:43:42,504 - Model - INFO - eval mean loss: 0.379020
+2026-04-16 22:43:42,504 - Model - INFO - eval point avg class IoU: 0.685225
+2026-04-16 22:43:42,504 - Model - INFO - eval point accuracy: 0.775430
+2026-04-16 22:43:42,504 - Model - INFO - eval point avg class acc: 0.787010
+2026-04-16 22:43:42,504 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.804 
+class optimal path points weight: 0.672, IoU: 0.566 
+
+2026-04-16 22:43:42,504 - Model - INFO - Eval mean loss: 0.379020
+2026-04-16 22:43:42,504 - Model - INFO - Eval accuracy: 0.775430
+2026-04-16 22:43:42,504 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:43:42,504 - Model - INFO - **** Epoch 32 (32/100) ****
+2026-04-16 22:43:42,505 - Model - INFO - Learning rate:0.000343
+2026-04-16 22:44:04,951 - Model - INFO - Training mean loss: 0.368692
+2026-04-16 22:44:04,952 - Model - INFO - Training accuracy: 0.838679
+2026-04-16 22:44:04,956 - Model - INFO - ---- EPOCH 032 EVALUATION ----
+2026-04-16 22:44:07,107 - Model - INFO - eval mean loss: 0.388858
+2026-04-16 22:44:07,107 - Model - INFO - eval point avg class IoU: 0.684698
+2026-04-16 22:44:07,107 - Model - INFO - eval point accuracy: 0.774170
+2026-04-16 22:44:07,107 - Model - INFO - eval point avg class acc: 0.788315
+2026-04-16 22:44:07,107 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.802 
+class optimal path points weight: 0.672, IoU: 0.568 
+
+2026-04-16 22:44:07,107 - Model - INFO - Eval mean loss: 0.388858
+2026-04-16 22:44:07,107 - Model - INFO - Eval accuracy: 0.774170
+2026-04-16 22:44:07,107 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:44:07,107 - Model - INFO - **** Epoch 33 (33/100) ****
+2026-04-16 22:44:07,107 - Model - INFO - Learning rate:0.000343
+2026-04-16 22:44:29,527 - Model - INFO - Training mean loss: 0.369191
+2026-04-16 22:44:29,527 - Model - INFO - Training accuracy: 0.837784
+2026-04-16 22:44:29,533 - Model - INFO - ---- EPOCH 033 EVALUATION ----
+2026-04-16 22:44:31,682 - Model - INFO - eval mean loss: 0.377176
+2026-04-16 22:44:31,682 - Model - INFO - eval point avg class IoU: 0.694292
+2026-04-16 22:44:31,682 - Model - INFO - eval point accuracy: 0.776920
+2026-04-16 22:44:31,682 - Model - INFO - eval point avg class acc: 0.799870
+2026-04-16 22:44:31,682 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.802 
+class optimal path points weight: 0.672, IoU: 0.586 
+
+2026-04-16 22:44:31,682 - Model - INFO - Eval mean loss: 0.377176
+2026-04-16 22:44:31,682 - Model - INFO - Eval accuracy: 0.776920
+2026-04-16 22:44:31,682 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:44:31,682 - Model - INFO - **** Epoch 34 (34/100) ****
+2026-04-16 22:44:31,682 - Model - INFO - Learning rate:0.000343
+2026-04-16 22:44:54,100 - Model - INFO - Training mean loss: 0.368483
+2026-04-16 22:44:54,100 - Model - INFO - Training accuracy: 0.838057
+2026-04-16 22:44:54,105 - Model - INFO - ---- EPOCH 034 EVALUATION ----
+2026-04-16 22:44:56,267 - Model - INFO - eval mean loss: 0.378697
+2026-04-16 22:44:56,268 - Model - INFO - eval point avg class IoU: 0.690055
+2026-04-16 22:44:56,268 - Model - INFO - eval point accuracy: 0.776495
+2026-04-16 22:44:56,268 - Model - INFO - eval point avg class acc: 0.793196
+2026-04-16 22:44:56,268 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.804 
+class optimal path points weight: 0.672, IoU: 0.576 
+
+2026-04-16 22:44:56,268 - Model - INFO - Eval mean loss: 0.378697
+2026-04-16 22:44:56,268 - Model - INFO - Eval accuracy: 0.776495
+2026-04-16 22:44:56,268 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:44:56,268 - Model - INFO - **** Epoch 35 (35/100) ****
+2026-04-16 22:44:56,268 - Model - INFO - Learning rate:0.000343
+2026-04-16 22:45:18,704 - Model - INFO - Training mean loss: 0.369708
+2026-04-16 22:45:18,705 - Model - INFO - Training accuracy: 0.837962
+2026-04-16 22:45:18,709 - Model - INFO - ---- EPOCH 035 EVALUATION ----
+2026-04-16 22:45:20,870 - Model - INFO - eval mean loss: 0.377963
+2026-04-16 22:45:20,871 - Model - INFO - eval point avg class IoU: 0.689199
+2026-04-16 22:45:20,871 - Model - INFO - eval point accuracy: 0.776682
+2026-04-16 22:45:20,871 - Model - INFO - eval point avg class acc: 0.791403
+2026-04-16 22:45:20,871 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.574 
+
+2026-04-16 22:45:20,871 - Model - INFO - Eval mean loss: 0.377963
+2026-04-16 22:45:20,871 - Model - INFO - Eval accuracy: 0.776682
+2026-04-16 22:45:20,871 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:45:20,871 - Model - INFO - **** Epoch 36 (36/100) ****
+2026-04-16 22:45:20,871 - Model - INFO - Learning rate:0.000343
+2026-04-16 22:45:43,280 - Model - INFO - Training mean loss: 0.369897
+2026-04-16 22:45:43,280 - Model - INFO - Training accuracy: 0.838351
+2026-04-16 22:45:43,284 - Model - INFO - ---- EPOCH 036 EVALUATION ----
+2026-04-16 22:45:45,435 - Model - INFO - eval mean loss: 0.372334
+2026-04-16 22:45:45,435 - Model - INFO - eval point avg class IoU: 0.693984
+2026-04-16 22:45:45,435 - Model - INFO - eval point accuracy: 0.778555
+2026-04-16 22:45:45,435 - Model - INFO - eval point avg class acc: 0.796123
+2026-04-16 22:45:45,435 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.806 
+class optimal path points weight: 0.672, IoU: 0.582 
+
+2026-04-16 22:45:45,435 - Model - INFO - Eval mean loss: 0.372334
+2026-04-16 22:45:45,435 - Model - INFO - Eval accuracy: 0.778555
+2026-04-16 22:45:45,435 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:45:45,435 - Model - INFO - **** Epoch 37 (37/100) ****
+2026-04-16 22:45:45,435 - Model - INFO - Learning rate:0.000343
+2026-04-16 22:46:07,854 - Model - INFO - Training mean loss: 0.368754
+2026-04-16 22:46:07,854 - Model - INFO - Training accuracy: 0.838320
+2026-04-16 22:46:07,858 - Model - INFO - ---- EPOCH 037 EVALUATION ----
+2026-04-16 22:46:10,039 - Model - INFO - eval mean loss: 0.372659
+2026-04-16 22:46:10,039 - Model - INFO - eval point avg class IoU: 0.695042
+2026-04-16 22:46:10,039 - Model - INFO - eval point accuracy: 0.776694
+2026-04-16 22:46:10,039 - Model - INFO - eval point avg class acc: 0.801715
+2026-04-16 22:46:10,039 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.801 
+class optimal path points weight: 0.672, IoU: 0.589 
+
+2026-04-16 22:46:10,039 - Model - INFO - Eval mean loss: 0.372659
+2026-04-16 22:46:10,039 - Model - INFO - Eval accuracy: 0.776694
+2026-04-16 22:46:10,039 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:46:10,039 - Model - INFO - **** Epoch 38 (38/100) ****
+2026-04-16 22:46:10,039 - Model - INFO - Learning rate:0.000343
+2026-04-16 22:46:32,446 - Model - INFO - Training mean loss: 0.368385
+2026-04-16 22:46:32,446 - Model - INFO - Training accuracy: 0.837985
+2026-04-16 22:46:32,450 - Model - INFO - ---- EPOCH 038 EVALUATION ----
+2026-04-16 22:46:34,601 - Model - INFO - eval mean loss: 0.380639
+2026-04-16 22:46:34,601 - Model - INFO - eval point avg class IoU: 0.682134
+2026-04-16 22:46:34,601 - Model - INFO - eval point accuracy: 0.774277
+2026-04-16 22:46:34,601 - Model - INFO - eval point avg class acc: 0.783950
+2026-04-16 22:46:34,601 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.803 
+class optimal path points weight: 0.672, IoU: 0.561 
+
+2026-04-16 22:46:34,601 - Model - INFO - Eval mean loss: 0.380639
+2026-04-16 22:46:34,601 - Model - INFO - Eval accuracy: 0.774277
+2026-04-16 22:46:34,601 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:46:34,601 - Model - INFO - **** Epoch 39 (39/100) ****
+2026-04-16 22:46:34,601 - Model - INFO - Learning rate:0.000343
+2026-04-16 22:46:57,010 - Model - INFO - Training mean loss: 0.367366
+2026-04-16 22:46:57,010 - Model - INFO - Training accuracy: 0.838511
+2026-04-16 22:46:57,014 - Model - INFO - ---- EPOCH 039 EVALUATION ----
+2026-04-16 22:46:59,173 - Model - INFO - eval mean loss: 0.370768
+2026-04-16 22:46:59,173 - Model - INFO - eval point avg class IoU: 0.694684
+2026-04-16 22:46:59,173 - Model - INFO - eval point accuracy: 0.777881
+2026-04-16 22:46:59,173 - Model - INFO - eval point avg class acc: 0.798658
+2026-04-16 22:46:59,173 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.804 
+class optimal path points weight: 0.672, IoU: 0.585 
+
+2026-04-16 22:46:59,173 - Model - INFO - Eval mean loss: 0.370768
+2026-04-16 22:46:59,173 - Model - INFO - Eval accuracy: 0.777881
+2026-04-16 22:46:59,173 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:46:59,173 - Model - INFO - **** Epoch 40 (40/100) ****
+2026-04-16 22:46:59,173 - Model - INFO - Learning rate:0.000343
+2026-04-16 22:47:21,605 - Model - INFO - Training mean loss: 0.368083
+2026-04-16 22:47:21,605 - Model - INFO - Training accuracy: 0.838250
+2026-04-16 22:47:21,609 - Model - INFO - ---- EPOCH 040 EVALUATION ----
+2026-04-16 22:47:23,769 - Model - INFO - eval mean loss: 0.372897
+2026-04-16 22:47:23,769 - Model - INFO - eval point avg class IoU: 0.691908
+2026-04-16 22:47:23,769 - Model - INFO - eval point accuracy: 0.776016
+2026-04-16 22:47:23,769 - Model - INFO - eval point avg class acc: 0.797358
+2026-04-16 22:47:23,769 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.802 
+class optimal path points weight: 0.672, IoU: 0.582 
+
+2026-04-16 22:47:23,770 - Model - INFO - Eval mean loss: 0.372897
+2026-04-16 22:47:23,770 - Model - INFO - Eval accuracy: 0.776016
+2026-04-16 22:47:23,770 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:47:23,770 - Model - INFO - **** Epoch 41 (41/100) ****
+2026-04-16 22:47:23,770 - Model - INFO - Learning rate:0.000240
+2026-04-16 22:47:46,193 - Model - INFO - Training mean loss: 0.367440
+2026-04-16 22:47:46,193 - Model - INFO - Training accuracy: 0.838598
+2026-04-16 22:47:46,197 - Model - INFO - ---- EPOCH 041 EVALUATION ----
+2026-04-16 22:47:48,350 - Model - INFO - eval mean loss: 0.374509
+2026-04-16 22:47:48,350 - Model - INFO - eval point avg class IoU: 0.687879
+2026-04-16 22:47:48,350 - Model - INFO - eval point accuracy: 0.776315
+2026-04-16 22:47:48,350 - Model - INFO - eval point avg class acc: 0.789847
+2026-04-16 22:47:48,350 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.571 
+
+2026-04-16 22:47:48,350 - Model - INFO - Eval mean loss: 0.374509
+2026-04-16 22:47:48,350 - Model - INFO - Eval accuracy: 0.776315
+2026-04-16 22:47:48,350 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:47:48,350 - Model - INFO - **** Epoch 42 (42/100) ****
+2026-04-16 22:47:48,350 - Model - INFO - Learning rate:0.000240
+2026-04-16 22:48:10,758 - Model - INFO - Training mean loss: 0.366668
+2026-04-16 22:48:10,758 - Model - INFO - Training accuracy: 0.838226
+2026-04-16 22:48:10,763 - Model - INFO - ---- EPOCH 042 EVALUATION ----
+2026-04-16 22:48:12,921 - Model - INFO - eval mean loss: 0.378226
+2026-04-16 22:48:12,921 - Model - INFO - eval point avg class IoU: 0.688751
+2026-04-16 22:48:12,921 - Model - INFO - eval point accuracy: 0.778088
+2026-04-16 22:48:12,921 - Model - INFO - eval point avg class acc: 0.788212
+2026-04-16 22:48:12,921 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.808 
+class optimal path points weight: 0.672, IoU: 0.569 
+
+2026-04-16 22:48:12,921 - Model - INFO - Eval mean loss: 0.378226
+2026-04-16 22:48:12,921 - Model - INFO - Eval accuracy: 0.778088
+2026-04-16 22:48:12,921 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:48:12,921 - Model - INFO - **** Epoch 43 (43/100) ****
+2026-04-16 22:48:12,921 - Model - INFO - Learning rate:0.000240
+2026-04-16 22:48:35,330 - Model - INFO - Training mean loss: 0.367220
+2026-04-16 22:48:35,330 - Model - INFO - Training accuracy: 0.839050
+2026-04-16 22:48:35,334 - Model - INFO - ---- EPOCH 043 EVALUATION ----
+2026-04-16 22:48:37,481 - Model - INFO - eval mean loss: 0.376917
+2026-04-16 22:48:37,482 - Model - INFO - eval point avg class IoU: 0.689769
+2026-04-16 22:48:37,482 - Model - INFO - eval point accuracy: 0.771896
+2026-04-16 22:48:37,482 - Model - INFO - eval point avg class acc: 0.801854
+2026-04-16 22:48:37,482 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.793 
+class optimal path points weight: 0.672, IoU: 0.586 
+
+2026-04-16 22:48:37,482 - Model - INFO - Eval mean loss: 0.376917
+2026-04-16 22:48:37,482 - Model - INFO - Eval accuracy: 0.771896
+2026-04-16 22:48:37,482 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:48:37,482 - Model - INFO - **** Epoch 44 (44/100) ****
+2026-04-16 22:48:37,482 - Model - INFO - Learning rate:0.000240
+2026-04-16 22:48:59,902 - Model - INFO - Training mean loss: 0.366743
+2026-04-16 22:48:59,902 - Model - INFO - Training accuracy: 0.839171
+2026-04-16 22:48:59,907 - Model - INFO - ---- EPOCH 044 EVALUATION ----
+2026-04-16 22:49:02,075 - Model - INFO - eval mean loss: 0.374171
+2026-04-16 22:49:02,075 - Model - INFO - eval point avg class IoU: 0.689868
+2026-04-16 22:49:02,075 - Model - INFO - eval point accuracy: 0.777698
+2026-04-16 22:49:02,075 - Model - INFO - eval point avg class acc: 0.790712
+2026-04-16 22:49:02,075 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.807 
+class optimal path points weight: 0.672, IoU: 0.573 
+
+2026-04-16 22:49:02,075 - Model - INFO - Eval mean loss: 0.374171
+2026-04-16 22:49:02,075 - Model - INFO - Eval accuracy: 0.777698
+2026-04-16 22:49:02,075 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:49:02,075 - Model - INFO - **** Epoch 45 (45/100) ****
+2026-04-16 22:49:02,075 - Model - INFO - Learning rate:0.000240
+2026-04-16 22:49:24,499 - Model - INFO - Training mean loss: 0.366562
+2026-04-16 22:49:24,500 - Model - INFO - Training accuracy: 0.839045
+2026-04-16 22:49:24,504 - Model - INFO - ---- EPOCH 045 EVALUATION ----
+2026-04-16 22:49:26,646 - Model - INFO - eval mean loss: 0.373325
+2026-04-16 22:49:26,646 - Model - INFO - eval point avg class IoU: 0.686394
+2026-04-16 22:49:26,646 - Model - INFO - eval point accuracy: 0.777063
+2026-04-16 22:49:26,646 - Model - INFO - eval point avg class acc: 0.786154
+2026-04-16 22:49:26,646 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.807 
+class optimal path points weight: 0.672, IoU: 0.566 
+
+2026-04-16 22:49:26,646 - Model - INFO - Eval mean loss: 0.373325
+2026-04-16 22:49:26,646 - Model - INFO - Eval accuracy: 0.777063
+2026-04-16 22:49:26,646 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:49:26,646 - Model - INFO - **** Epoch 46 (46/100) ****
+2026-04-16 22:49:26,646 - Model - INFO - Learning rate:0.000240
+2026-04-16 22:49:49,056 - Model - INFO - Training mean loss: 0.366836
+2026-04-16 22:49:49,056 - Model - INFO - Training accuracy: 0.838402
+2026-04-16 22:49:49,060 - Model - INFO - ---- EPOCH 046 EVALUATION ----
+2026-04-16 22:49:51,294 - Model - INFO - eval mean loss: 0.376412
+2026-04-16 22:49:51,294 - Model - INFO - eval point avg class IoU: 0.682275
+2026-04-16 22:49:51,294 - Model - INFO - eval point accuracy: 0.775552
+2026-04-16 22:49:51,294 - Model - INFO - eval point avg class acc: 0.782120
+2026-04-16 22:49:51,294 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.806 
+class optimal path points weight: 0.672, IoU: 0.559 
+
+2026-04-16 22:49:51,294 - Model - INFO - Eval mean loss: 0.376412
+2026-04-16 22:49:51,294 - Model - INFO - Eval accuracy: 0.775552
+2026-04-16 22:49:51,294 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:49:51,294 - Model - INFO - **** Epoch 47 (47/100) ****
+2026-04-16 22:49:51,294 - Model - INFO - Learning rate:0.000240
+2026-04-16 22:50:14,939 - Model - INFO - Training mean loss: 0.366042
+2026-04-16 22:50:14,939 - Model - INFO - Training accuracy: 0.838519
+2026-04-16 22:50:14,943 - Model - INFO - ---- EPOCH 047 EVALUATION ----
+2026-04-16 22:50:17,134 - Model - INFO - eval mean loss: 0.375059
+2026-04-16 22:50:17,134 - Model - INFO - eval point avg class IoU: 0.684825
+2026-04-16 22:50:17,134 - Model - INFO - eval point accuracy: 0.776025
+2026-04-16 22:50:17,134 - Model - INFO - eval point avg class acc: 0.785369
+2026-04-16 22:50:17,134 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.806 
+class optimal path points weight: 0.672, IoU: 0.564 
+
+2026-04-16 22:50:17,134 - Model - INFO - Eval mean loss: 0.375059
+2026-04-16 22:50:17,134 - Model - INFO - Eval accuracy: 0.776025
+2026-04-16 22:50:17,134 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:50:17,134 - Model - INFO - **** Epoch 48 (48/100) ****
+2026-04-16 22:50:17,134 - Model - INFO - Learning rate:0.000240
+2026-04-16 22:50:40,462 - Model - INFO - Training mean loss: 0.366946
+2026-04-16 22:50:40,462 - Model - INFO - Training accuracy: 0.838739
+2026-04-16 22:50:40,466 - Model - INFO - ---- EPOCH 048 EVALUATION ----
+2026-04-16 22:50:42,638 - Model - INFO - eval mean loss: 0.368783
+2026-04-16 22:50:42,639 - Model - INFO - eval point avg class IoU: 0.695962
+2026-04-16 22:50:42,639 - Model - INFO - eval point accuracy: 0.777759
+2026-04-16 22:50:42,639 - Model - INFO - eval point avg class acc: 0.801219
+2026-04-16 22:50:42,639 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.803 
+class optimal path points weight: 0.672, IoU: 0.589 
+
+2026-04-16 22:50:42,639 - Model - INFO - Eval mean loss: 0.368783
+2026-04-16 22:50:42,639 - Model - INFO - Eval accuracy: 0.777759
+2026-04-16 22:50:42,639 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:50:42,639 - Model - INFO - **** Epoch 49 (49/100) ****
+2026-04-16 22:50:42,639 - Model - INFO - Learning rate:0.000240
+2026-04-16 22:51:05,624 - Model - INFO - Training mean loss: 0.368576
+2026-04-16 22:51:05,624 - Model - INFO - Training accuracy: 0.838743
+2026-04-16 22:51:05,631 - Model - INFO - ---- EPOCH 049 EVALUATION ----
+2026-04-16 22:51:07,807 - Model - INFO - eval mean loss: 0.381384
+2026-04-16 22:51:07,807 - Model - INFO - eval point avg class IoU: 0.683124
+2026-04-16 22:51:07,807 - Model - INFO - eval point accuracy: 0.765588
+2026-04-16 22:51:07,807 - Model - INFO - eval point avg class acc: 0.802600
+2026-04-16 22:51:07,807 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.782 
+class optimal path points weight: 0.672, IoU: 0.584 
+
+2026-04-16 22:51:07,807 - Model - INFO - Eval mean loss: 0.381384
+2026-04-16 22:51:07,807 - Model - INFO - Eval accuracy: 0.765588
+2026-04-16 22:51:07,807 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:51:07,807 - Model - INFO - **** Epoch 50 (50/100) ****
+2026-04-16 22:51:07,807 - Model - INFO - Learning rate:0.000240
+2026-04-16 22:51:30,290 - Model - INFO - Training mean loss: 0.366332
+2026-04-16 22:51:30,290 - Model - INFO - Training accuracy: 0.839459
+2026-04-16 22:51:30,294 - Model - INFO - ---- EPOCH 050 EVALUATION ----
+2026-04-16 22:51:32,450 - Model - INFO - eval mean loss: 0.368486
+2026-04-16 22:51:32,450 - Model - INFO - eval point avg class IoU: 0.694772
+2026-04-16 22:51:32,450 - Model - INFO - eval point accuracy: 0.778986
+2026-04-16 22:51:32,450 - Model - INFO - eval point avg class acc: 0.796673
+2026-04-16 22:51:32,450 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.807 
+class optimal path points weight: 0.672, IoU: 0.583 
+
+2026-04-16 22:51:32,450 - Model - INFO - Eval mean loss: 0.368486
+2026-04-16 22:51:32,450 - Model - INFO - Eval accuracy: 0.778986
+2026-04-16 22:51:32,450 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:51:32,450 - Model - INFO - **** Epoch 51 (51/100) ****
+2026-04-16 22:51:32,450 - Model - INFO - Learning rate:0.000168
+2026-04-16 22:51:56,570 - Model - INFO - Training mean loss: 0.365187
+2026-04-16 22:51:56,570 - Model - INFO - Training accuracy: 0.839700
+2026-04-16 22:51:56,574 - Model - INFO - ---- EPOCH 051 EVALUATION ----
+2026-04-16 22:51:58,767 - Model - INFO - eval mean loss: 0.370658
+2026-04-16 22:51:58,767 - Model - INFO - eval point avg class IoU: 0.695143
+2026-04-16 22:51:58,767 - Model - INFO - eval point accuracy: 0.777798
+2026-04-16 22:51:58,767 - Model - INFO - eval point avg class acc: 0.799647
+2026-04-16 22:51:58,767 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.804 
+class optimal path points weight: 0.672, IoU: 0.586 
+
+2026-04-16 22:51:58,768 - Model - INFO - Eval mean loss: 0.370658
+2026-04-16 22:51:58,768 - Model - INFO - Eval accuracy: 0.777798
+2026-04-16 22:51:58,768 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:51:58,768 - Model - INFO - **** Epoch 52 (52/100) ****
+2026-04-16 22:51:58,768 - Model - INFO - Learning rate:0.000168
+2026-04-16 22:52:23,488 - Model - INFO - Training mean loss: 0.365445
+2026-04-16 22:52:23,488 - Model - INFO - Training accuracy: 0.839549
+2026-04-16 22:52:23,492 - Model - INFO - ---- EPOCH 052 EVALUATION ----
+2026-04-16 22:52:25,653 - Model - INFO - eval mean loss: 0.367016
+2026-04-16 22:52:25,653 - Model - INFO - eval point avg class IoU: 0.695141
+2026-04-16 22:52:25,653 - Model - INFO - eval point accuracy: 0.779355
+2026-04-16 22:52:25,653 - Model - INFO - eval point avg class acc: 0.796612
+2026-04-16 22:52:25,653 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.807 
+class optimal path points weight: 0.672, IoU: 0.583 
+
+2026-04-16 22:52:25,653 - Model - INFO - Eval mean loss: 0.367016
+2026-04-16 22:52:25,653 - Model - INFO - Eval accuracy: 0.779355
+2026-04-16 22:52:25,653 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:52:25,653 - Model - INFO - **** Epoch 53 (53/100) ****
+2026-04-16 22:52:25,653 - Model - INFO - Learning rate:0.000168
+2026-04-16 22:52:49,181 - Model - INFO - Training mean loss: 0.364636
+2026-04-16 22:52:49,181 - Model - INFO - Training accuracy: 0.839574
+2026-04-16 22:52:49,185 - Model - INFO - ---- EPOCH 053 EVALUATION ----
+2026-04-16 22:52:52,142 - Model - INFO - eval mean loss: 0.372868
+2026-04-16 22:52:52,142 - Model - INFO - eval point avg class IoU: 0.688636
+2026-04-16 22:52:52,142 - Model - INFO - eval point accuracy: 0.778278
+2026-04-16 22:52:52,142 - Model - INFO - eval point avg class acc: 0.787708
+2026-04-16 22:52:52,142 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.808 
+class optimal path points weight: 0.672, IoU: 0.569 
+
+2026-04-16 22:52:52,142 - Model - INFO - Eval mean loss: 0.372868
+2026-04-16 22:52:52,142 - Model - INFO - Eval accuracy: 0.778278
+2026-04-16 22:52:52,142 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:52:52,142 - Model - INFO - **** Epoch 54 (54/100) ****
+2026-04-16 22:52:52,142 - Model - INFO - Learning rate:0.000168
+2026-04-16 22:53:16,780 - Model - INFO - Training mean loss: 0.364298
+2026-04-16 22:53:16,780 - Model - INFO - Training accuracy: 0.839764
+2026-04-16 22:53:16,784 - Model - INFO - ---- EPOCH 054 EVALUATION ----
+2026-04-16 22:53:18,976 - Model - INFO - eval mean loss: 0.374530
+2026-04-16 22:53:18,976 - Model - INFO - eval point avg class IoU: 0.690250
+2026-04-16 22:53:18,976 - Model - INFO - eval point accuracy: 0.776773
+2026-04-16 22:53:18,976 - Model - INFO - eval point avg class acc: 0.793019
+2026-04-16 22:53:18,976 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.804 
+class optimal path points weight: 0.672, IoU: 0.576 
+
+2026-04-16 22:53:18,976 - Model - INFO - Eval mean loss: 0.374530
+2026-04-16 22:53:18,976 - Model - INFO - Eval accuracy: 0.776773
+2026-04-16 22:53:18,976 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:53:18,976 - Model - INFO - **** Epoch 55 (55/100) ****
+2026-04-16 22:53:18,976 - Model - INFO - Learning rate:0.000168
+2026-04-16 22:53:45,394 - Model - INFO - Training mean loss: 0.364153
+2026-04-16 22:53:45,394 - Model - INFO - Training accuracy: 0.839796
+2026-04-16 22:53:45,399 - Model - INFO - ---- EPOCH 055 EVALUATION ----
+2026-04-16 22:53:48,248 - Model - INFO - eval mean loss: 0.375513
+2026-04-16 22:53:48,248 - Model - INFO - eval point avg class IoU: 0.687332
+2026-04-16 22:53:48,248 - Model - INFO - eval point accuracy: 0.776227
+2026-04-16 22:53:48,248 - Model - INFO - eval point avg class acc: 0.789095
+2026-04-16 22:53:48,248 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.570 
+
+2026-04-16 22:53:48,248 - Model - INFO - Eval mean loss: 0.375513
+2026-04-16 22:53:48,248 - Model - INFO - Eval accuracy: 0.776227
+2026-04-16 22:53:48,248 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:53:48,248 - Model - INFO - **** Epoch 56 (56/100) ****
+2026-04-16 22:53:48,248 - Model - INFO - Learning rate:0.000168
+2026-04-16 22:54:17,275 - Model - INFO - Training mean loss: 0.362505
+2026-04-16 22:54:17,275 - Model - INFO - Training accuracy: 0.840180
+2026-04-16 22:54:17,280 - Model - INFO - ---- EPOCH 056 EVALUATION ----
+2026-04-16 22:54:20,062 - Model - INFO - eval mean loss: 0.373739
+2026-04-16 22:54:20,062 - Model - INFO - eval point avg class IoU: 0.690291
+2026-04-16 22:54:20,062 - Model - INFO - eval point accuracy: 0.776862
+2026-04-16 22:54:20,062 - Model - INFO - eval point avg class acc: 0.792927
+2026-04-16 22:54:20,062 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.576 
+
+2026-04-16 22:54:20,062 - Model - INFO - Eval mean loss: 0.373739
+2026-04-16 22:54:20,062 - Model - INFO - Eval accuracy: 0.776862
+2026-04-16 22:54:20,062 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:54:20,062 - Model - INFO - **** Epoch 57 (57/100) ****
+2026-04-16 22:54:20,062 - Model - INFO - Learning rate:0.000168
+2026-04-16 22:54:49,175 - Model - INFO - Training mean loss: 0.363563
+2026-04-16 22:54:49,175 - Model - INFO - Training accuracy: 0.839398
+2026-04-16 22:54:49,179 - Model - INFO - ---- EPOCH 057 EVALUATION ----
+2026-04-16 22:54:51,966 - Model - INFO - eval mean loss: 0.369120
+2026-04-16 22:54:51,966 - Model - INFO - eval point avg class IoU: 0.699031
+2026-04-16 22:54:51,966 - Model - INFO - eval point accuracy: 0.777551
+2026-04-16 22:54:51,966 - Model - INFO - eval point avg class acc: 0.807478
+2026-04-16 22:54:51,966 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.801 
+class optimal path points weight: 0.672, IoU: 0.597 
+
+2026-04-16 22:54:51,966 - Model - INFO - Eval mean loss: 0.369120
+2026-04-16 22:54:51,966 - Model - INFO - Eval accuracy: 0.777551
+2026-04-16 22:54:51,966 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:54:51,966 - Model - INFO - **** Epoch 58 (58/100) ****
+2026-04-16 22:54:51,966 - Model - INFO - Learning rate:0.000168
+2026-04-16 22:55:20,964 - Model - INFO - Training mean loss: 0.363670
+2026-04-16 22:55:20,964 - Model - INFO - Training accuracy: 0.840380
+2026-04-16 22:55:20,968 - Model - INFO - ---- EPOCH 058 EVALUATION ----
+2026-04-16 22:55:23,787 - Model - INFO - eval mean loss: 0.362543
+2026-04-16 22:55:23,787 - Model - INFO - eval point avg class IoU: 0.699079
+2026-04-16 22:55:23,787 - Model - INFO - eval point accuracy: 0.779523
+2026-04-16 22:55:23,787 - Model - INFO - eval point avg class acc: 0.803317
+2026-04-16 22:55:23,787 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.806 
+class optimal path points weight: 0.672, IoU: 0.593 
+
+2026-04-16 22:55:23,787 - Model - INFO - Eval mean loss: 0.362543
+2026-04-16 22:55:23,787 - Model - INFO - Eval accuracy: 0.779523
+2026-04-16 22:55:23,787 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:55:23,787 - Model - INFO - **** Epoch 59 (59/100) ****
+2026-04-16 22:55:23,788 - Model - INFO - Learning rate:0.000168
+2026-04-16 22:55:52,775 - Model - INFO - Training mean loss: 0.363345
+2026-04-16 22:55:52,775 - Model - INFO - Training accuracy: 0.840040
+2026-04-16 22:55:52,779 - Model - INFO - ---- EPOCH 059 EVALUATION ----
+2026-04-16 22:55:55,572 - Model - INFO - eval mean loss: 0.364304
+2026-04-16 22:55:55,572 - Model - INFO - eval point avg class IoU: 0.701204
+2026-04-16 22:55:55,572 - Model - INFO - eval point accuracy: 0.779761
+2026-04-16 22:55:55,572 - Model - INFO - eval point avg class acc: 0.806799
+2026-04-16 22:55:55,572 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.598 
+
+2026-04-16 22:55:55,572 - Model - INFO - Eval mean loss: 0.364304
+2026-04-16 22:55:55,572 - Model - INFO - Eval accuracy: 0.779761
+2026-04-16 22:55:55,572 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:55:55,572 - Model - INFO - **** Epoch 60 (60/100) ****
+2026-04-16 22:55:55,572 - Model - INFO - Learning rate:0.000168
+2026-04-16 22:56:24,487 - Model - INFO - Training mean loss: 0.361618
+2026-04-16 22:56:24,487 - Model - INFO - Training accuracy: 0.840164
+2026-04-16 22:56:24,491 - Model - INFO - ---- EPOCH 060 EVALUATION ----
+2026-04-16 22:56:27,261 - Model - INFO - eval mean loss: 0.376141
+2026-04-16 22:56:27,261 - Model - INFO - eval point avg class IoU: 0.690811
+2026-04-16 22:56:27,261 - Model - INFO - eval point accuracy: 0.775967
+2026-04-16 22:56:27,261 - Model - INFO - eval point avg class acc: 0.795502
+2026-04-16 22:56:27,261 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.802 
+class optimal path points weight: 0.672, IoU: 0.579 
+
+2026-04-16 22:56:27,261 - Model - INFO - Eval mean loss: 0.376141
+2026-04-16 22:56:27,261 - Model - INFO - Eval accuracy: 0.775967
+2026-04-16 22:56:27,261 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:56:27,261 - Model - INFO - **** Epoch 61 (61/100) ****
+2026-04-16 22:56:27,261 - Model - INFO - Learning rate:0.000118
+2026-04-16 22:56:56,267 - Model - INFO - Training mean loss: 0.364376
+2026-04-16 22:56:56,267 - Model - INFO - Training accuracy: 0.840031
+2026-04-16 22:56:56,271 - Model - INFO - ---- EPOCH 061 EVALUATION ----
+2026-04-16 22:56:59,181 - Model - INFO - eval mean loss: 0.372160
+2026-04-16 22:56:59,181 - Model - INFO - eval point avg class IoU: 0.694350
+2026-04-16 22:56:59,181 - Model - INFO - eval point accuracy: 0.777725
+2026-04-16 22:56:59,181 - Model - INFO - eval point avg class acc: 0.798368
+2026-04-16 22:56:59,181 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.804 
+class optimal path points weight: 0.672, IoU: 0.584 
+
+2026-04-16 22:56:59,181 - Model - INFO - Eval mean loss: 0.372160
+2026-04-16 22:56:59,181 - Model - INFO - Eval accuracy: 0.777725
+2026-04-16 22:56:59,181 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:56:59,181 - Model - INFO - **** Epoch 62 (62/100) ****
+2026-04-16 22:56:59,181 - Model - INFO - Learning rate:0.000118
+2026-04-16 22:57:27,038 - Model - INFO - Training mean loss: 0.363915
+2026-04-16 22:57:27,038 - Model - INFO - Training accuracy: 0.839115
+2026-04-16 22:57:27,042 - Model - INFO - ---- EPOCH 062 EVALUATION ----
+2026-04-16 22:57:29,588 - Model - INFO - eval mean loss: 0.369613
+2026-04-16 22:57:29,588 - Model - INFO - eval point avg class IoU: 0.696629
+2026-04-16 22:57:29,588 - Model - INFO - eval point accuracy: 0.777136
+2026-04-16 22:57:29,589 - Model - INFO - eval point avg class acc: 0.803763
+2026-04-16 22:57:29,589 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.802 
+class optimal path points weight: 0.672, IoU: 0.592 
+
+2026-04-16 22:57:29,589 - Model - INFO - Eval mean loss: 0.369613
+2026-04-16 22:57:29,589 - Model - INFO - Eval accuracy: 0.777136
+2026-04-16 22:57:29,589 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:57:29,589 - Model - INFO - **** Epoch 63 (63/100) ****
+2026-04-16 22:57:29,589 - Model - INFO - Learning rate:0.000118
+2026-04-16 22:57:58,159 - Model - INFO - Training mean loss: 0.361545
+2026-04-16 22:57:58,159 - Model - INFO - Training accuracy: 0.840632
+2026-04-16 22:57:58,164 - Model - INFO - ---- EPOCH 063 EVALUATION ----
+2026-04-16 22:58:00,757 - Model - INFO - eval mean loss: 0.367261
+2026-04-16 22:58:00,757 - Model - INFO - eval point avg class IoU: 0.697057
+2026-04-16 22:58:00,757 - Model - INFO - eval point accuracy: 0.779422
+2026-04-16 22:58:00,757 - Model - INFO - eval point avg class acc: 0.799851
+2026-04-16 22:58:00,757 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.807 
+class optimal path points weight: 0.672, IoU: 0.588 
+
+2026-04-16 22:58:00,757 - Model - INFO - Eval mean loss: 0.367261
+2026-04-16 22:58:00,757 - Model - INFO - Eval accuracy: 0.779422
+2026-04-16 22:58:00,757 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:58:00,757 - Model - INFO - **** Epoch 64 (64/100) ****
+2026-04-16 22:58:00,757 - Model - INFO - Learning rate:0.000118
+2026-04-16 22:58:30,119 - Model - INFO - Training mean loss: 0.362992
+2026-04-16 22:58:30,119 - Model - INFO - Training accuracy: 0.840121
+2026-04-16 22:58:30,123 - Model - INFO - ---- EPOCH 064 EVALUATION ----
+2026-04-16 22:58:32,950 - Model - INFO - eval mean loss: 0.370847
+2026-04-16 22:58:32,950 - Model - INFO - eval point avg class IoU: 0.693138
+2026-04-16 22:58:32,950 - Model - INFO - eval point accuracy: 0.773941
+2026-04-16 22:58:32,950 - Model - INFO - eval point avg class acc: 0.803961
+2026-04-16 22:58:32,950 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.796 
+class optimal path points weight: 0.672, IoU: 0.590 
+
+2026-04-16 22:58:32,951 - Model - INFO - Eval mean loss: 0.370847
+2026-04-16 22:58:32,951 - Model - INFO - Eval accuracy: 0.773941
+2026-04-16 22:58:32,951 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:58:32,951 - Model - INFO - **** Epoch 65 (65/100) ****
+2026-04-16 22:58:32,951 - Model - INFO - Learning rate:0.000118
+2026-04-16 22:58:57,478 - Model - INFO - Training mean loss: 0.362735
+2026-04-16 22:58:57,478 - Model - INFO - Training accuracy: 0.840297
+2026-04-16 22:58:57,482 - Model - INFO - ---- EPOCH 065 EVALUATION ----
+2026-04-16 22:58:59,639 - Model - INFO - eval mean loss: 0.369932
+2026-04-16 22:58:59,639 - Model - INFO - eval point avg class IoU: 0.694429
+2026-04-16 22:58:59,639 - Model - INFO - eval point accuracy: 0.779132
+2026-04-16 22:58:59,639 - Model - INFO - eval point avg class acc: 0.795803
+2026-04-16 22:58:59,639 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.807 
+class optimal path points weight: 0.672, IoU: 0.582 
+
+2026-04-16 22:58:59,639 - Model - INFO - Eval mean loss: 0.369932
+2026-04-16 22:58:59,639 - Model - INFO - Eval accuracy: 0.779132
+2026-04-16 22:58:59,639 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:58:59,639 - Model - INFO - **** Epoch 66 (66/100) ****
+2026-04-16 22:58:59,639 - Model - INFO - Learning rate:0.000118
+2026-04-16 22:59:22,043 - Model - INFO - Training mean loss: 0.362289
+2026-04-16 22:59:22,043 - Model - INFO - Training accuracy: 0.839915
+2026-04-16 22:59:22,050 - Model - INFO - ---- EPOCH 066 EVALUATION ----
+2026-04-16 22:59:24,205 - Model - INFO - eval mean loss: 0.369806
+2026-04-16 22:59:24,205 - Model - INFO - eval point avg class IoU: 0.697066
+2026-04-16 22:59:24,205 - Model - INFO - eval point accuracy: 0.777563
+2026-04-16 22:59:24,205 - Model - INFO - eval point avg class acc: 0.803680
+2026-04-16 22:59:24,205 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.802 
+class optimal path points weight: 0.672, IoU: 0.592 
+
+2026-04-16 22:59:24,205 - Model - INFO - Eval mean loss: 0.369806
+2026-04-16 22:59:24,205 - Model - INFO - Eval accuracy: 0.777563
+2026-04-16 22:59:24,205 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:59:24,205 - Model - INFO - **** Epoch 67 (67/100) ****
+2026-04-16 22:59:24,205 - Model - INFO - Learning rate:0.000118
+2026-04-16 22:59:46,927 - Model - INFO - Training mean loss: 0.361872
+2026-04-16 22:59:46,927 - Model - INFO - Training accuracy: 0.839991
+2026-04-16 22:59:46,931 - Model - INFO - ---- EPOCH 067 EVALUATION ----
+2026-04-16 22:59:49,088 - Model - INFO - eval mean loss: 0.369918
+2026-04-16 22:59:49,088 - Model - INFO - eval point avg class IoU: 0.694905
+2026-04-16 22:59:49,088 - Model - INFO - eval point accuracy: 0.778928
+2026-04-16 22:59:49,088 - Model - INFO - eval point avg class acc: 0.797016
+2026-04-16 22:59:49,088 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.807 
+class optimal path points weight: 0.672, IoU: 0.583 
+
+2026-04-16 22:59:49,088 - Model - INFO - Eval mean loss: 0.369918
+2026-04-16 22:59:49,088 - Model - INFO - Eval accuracy: 0.778928
+2026-04-16 22:59:49,088 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 22:59:49,088 - Model - INFO - **** Epoch 68 (68/100) ****
+2026-04-16 22:59:49,088 - Model - INFO - Learning rate:0.000118
+2026-04-16 23:00:11,597 - Model - INFO - Training mean loss: 0.361521
+2026-04-16 23:00:11,597 - Model - INFO - Training accuracy: 0.840058
+2026-04-16 23:00:11,601 - Model - INFO - ---- EPOCH 068 EVALUATION ----
+2026-04-16 23:00:13,854 - Model - INFO - eval mean loss: 0.373263
+2026-04-16 23:00:13,854 - Model - INFO - eval point avg class IoU: 0.691422
+2026-04-16 23:00:13,854 - Model - INFO - eval point accuracy: 0.778329
+2026-04-16 23:00:13,854 - Model - INFO - eval point avg class acc: 0.792176
+2026-04-16 23:00:13,854 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.807 
+class optimal path points weight: 0.672, IoU: 0.576 
+
+2026-04-16 23:00:13,854 - Model - INFO - Eval mean loss: 0.373263
+2026-04-16 23:00:13,854 - Model - INFO - Eval accuracy: 0.778329
+2026-04-16 23:00:13,854 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 23:00:13,854 - Model - INFO - **** Epoch 69 (69/100) ****
+2026-04-16 23:00:13,854 - Model - INFO - Learning rate:0.000118
+2026-04-16 23:00:36,648 - Model - INFO - Training mean loss: 0.361559
+2026-04-16 23:00:36,648 - Model - INFO - Training accuracy: 0.840070
+2026-04-16 23:00:36,653 - Model - INFO - ---- EPOCH 069 EVALUATION ----
+2026-04-16 23:00:38,840 - Model - INFO - eval mean loss: 0.369425
+2026-04-16 23:00:38,840 - Model - INFO - eval point avg class IoU: 0.695864
+2026-04-16 23:00:38,840 - Model - INFO - eval point accuracy: 0.778323
+2026-04-16 23:00:38,840 - Model - INFO - eval point avg class acc: 0.799898
+2026-04-16 23:00:38,840 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.587 
+
+2026-04-16 23:00:38,840 - Model - INFO - Eval mean loss: 0.369425
+2026-04-16 23:00:38,840 - Model - INFO - Eval accuracy: 0.778323
+2026-04-16 23:00:38,840 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 23:00:38,840 - Model - INFO - **** Epoch 70 (70/100) ****
+2026-04-16 23:00:38,840 - Model - INFO - Learning rate:0.000118
+2026-04-16 23:01:03,380 - Model - INFO - Training mean loss: 0.362713
+2026-04-16 23:01:03,380 - Model - INFO - Training accuracy: 0.840264
+2026-04-16 23:01:03,384 - Model - INFO - ---- EPOCH 070 EVALUATION ----
+2026-04-16 23:01:06,179 - Model - INFO - eval mean loss: 0.367790
+2026-04-16 23:01:06,179 - Model - INFO - eval point avg class IoU: 0.695515
+2026-04-16 23:01:06,179 - Model - INFO - eval point accuracy: 0.778973
+2026-04-16 23:01:06,179 - Model - INFO - eval point avg class acc: 0.797995
+2026-04-16 23:01:06,179 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.806 
+class optimal path points weight: 0.672, IoU: 0.585 
+
+2026-04-16 23:01:06,179 - Model - INFO - Eval mean loss: 0.367790
+2026-04-16 23:01:06,179 - Model - INFO - Eval accuracy: 0.778973
+2026-04-16 23:01:06,179 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 23:01:06,179 - Model - INFO - **** Epoch 71 (71/100) ****
+2026-04-16 23:01:06,179 - Model - INFO - Learning rate:0.000082
+2026-04-16 23:01:30,330 - Model - INFO - Training mean loss: 0.362877
+2026-04-16 23:01:30,330 - Model - INFO - Training accuracy: 0.840336
+2026-04-16 23:01:30,334 - Model - INFO - ---- EPOCH 071 EVALUATION ----
+2026-04-16 23:01:32,512 - Model - INFO - eval mean loss: 0.368456
+2026-04-16 23:01:32,512 - Model - INFO - eval point avg class IoU: 0.696501
+2026-04-16 23:01:32,512 - Model - INFO - eval point accuracy: 0.776907
+2026-04-16 23:01:32,512 - Model - INFO - eval point avg class acc: 0.804008
+2026-04-16 23:01:32,512 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.801 
+class optimal path points weight: 0.672, IoU: 0.592 
+
+2026-04-16 23:01:32,512 - Model - INFO - Eval mean loss: 0.368456
+2026-04-16 23:01:32,512 - Model - INFO - Eval accuracy: 0.776907
+2026-04-16 23:01:32,512 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 23:01:32,512 - Model - INFO - **** Epoch 72 (72/100) ****
+2026-04-16 23:01:32,512 - Model - INFO - Learning rate:0.000082
+2026-04-16 23:01:59,016 - Model - INFO - Training mean loss: 0.361825
+2026-04-16 23:01:59,016 - Model - INFO - Training accuracy: 0.840125
+2026-04-16 23:01:59,020 - Model - INFO - ---- EPOCH 072 EVALUATION ----
+2026-04-16 23:02:01,839 - Model - INFO - eval mean loss: 0.363289
+2026-04-16 23:02:01,839 - Model - INFO - eval point avg class IoU: 0.700568
+2026-04-16 23:02:01,839 - Model - INFO - eval point accuracy: 0.780563
+2026-04-16 23:02:01,839 - Model - INFO - eval point avg class acc: 0.803898
+2026-04-16 23:02:01,839 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.807 
+class optimal path points weight: 0.672, IoU: 0.594 
+
+2026-04-16 23:02:01,839 - Model - INFO - Eval mean loss: 0.363289
+2026-04-16 23:02:01,839 - Model - INFO - Eval accuracy: 0.780563
+2026-04-16 23:02:01,839 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 23:02:01,839 - Model - INFO - **** Epoch 73 (73/100) ****
+2026-04-16 23:02:01,839 - Model - INFO - Learning rate:0.000082
+2026-04-16 23:02:30,801 - Model - INFO - Training mean loss: 0.359933
+2026-04-16 23:02:30,801 - Model - INFO - Training accuracy: 0.840799
+2026-04-16 23:02:30,805 - Model - INFO - ---- EPOCH 073 EVALUATION ----
+2026-04-16 23:02:33,617 - Model - INFO - eval mean loss: 0.366600
+2026-04-16 23:02:33,617 - Model - INFO - eval point avg class IoU: 0.699742
+2026-04-16 23:02:33,617 - Model - INFO - eval point accuracy: 0.777954
+2026-04-16 23:02:33,617 - Model - INFO - eval point avg class acc: 0.807968
+2026-04-16 23:02:33,617 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.802 
+class optimal path points weight: 0.672, IoU: 0.598 
+
+2026-04-16 23:02:33,617 - Model - INFO - Eval mean loss: 0.366600
+2026-04-16 23:02:33,617 - Model - INFO - Eval accuracy: 0.777954
+2026-04-16 23:02:33,617 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 23:02:33,617 - Model - INFO - **** Epoch 74 (74/100) ****
+2026-04-16 23:02:33,617 - Model - INFO - Learning rate:0.000082
+2026-04-16 23:03:02,625 - Model - INFO - Training mean loss: 0.363426
+2026-04-16 23:03:02,625 - Model - INFO - Training accuracy: 0.841138
+2026-04-16 23:03:02,629 - Model - INFO - ---- EPOCH 074 EVALUATION ----
+2026-04-16 23:03:05,435 - Model - INFO - eval mean loss: 0.367744
+2026-04-16 23:03:05,435 - Model - INFO - eval point avg class IoU: 0.696824
+2026-04-16 23:03:05,435 - Model - INFO - eval point accuracy: 0.777133
+2026-04-16 23:03:05,435 - Model - INFO - eval point avg class acc: 0.804139
+2026-04-16 23:03:05,435 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.801 
+class optimal path points weight: 0.672, IoU: 0.592 
+
+2026-04-16 23:03:05,435 - Model - INFO - Eval mean loss: 0.367744
+2026-04-16 23:03:05,435 - Model - INFO - Eval accuracy: 0.777133
+2026-04-16 23:03:05,435 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 23:03:05,435 - Model - INFO - **** Epoch 75 (75/100) ****
+2026-04-16 23:03:05,435 - Model - INFO - Learning rate:0.000082
+2026-04-16 23:03:34,373 - Model - INFO - Training mean loss: 0.361510
+2026-04-16 23:03:34,373 - Model - INFO - Training accuracy: 0.840024
+2026-04-16 23:03:34,377 - Model - INFO - ---- EPOCH 075 EVALUATION ----
+2026-04-16 23:03:37,164 - Model - INFO - eval mean loss: 0.368555
+2026-04-16 23:03:37,164 - Model - INFO - eval point avg class IoU: 0.692041
+2026-04-16 23:03:37,164 - Model - INFO - eval point accuracy: 0.776736
+2026-04-16 23:03:37,164 - Model - INFO - eval point avg class acc: 0.796194
+2026-04-16 23:03:37,164 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.803 
+class optimal path points weight: 0.672, IoU: 0.581 
+
+2026-04-16 23:03:37,164 - Model - INFO - Eval mean loss: 0.368555
+2026-04-16 23:03:37,164 - Model - INFO - Eval accuracy: 0.776736
+2026-04-16 23:03:37,164 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 23:03:37,164 - Model - INFO - **** Epoch 76 (76/100) ****
+2026-04-16 23:03:37,164 - Model - INFO - Learning rate:0.000082
+2026-04-16 23:04:06,060 - Model - INFO - Training mean loss: 0.360910
+2026-04-16 23:04:06,061 - Model - INFO - Training accuracy: 0.840910
+2026-04-16 23:04:06,065 - Model - INFO - ---- EPOCH 076 EVALUATION ----
+2026-04-16 23:04:08,876 - Model - INFO - eval mean loss: 0.367112
+2026-04-16 23:04:08,877 - Model - INFO - eval point avg class IoU: 0.696011
+2026-04-16 23:04:08,877 - Model - INFO - eval point accuracy: 0.780573
+2026-04-16 23:04:08,877 - Model - INFO - eval point avg class acc: 0.795819
+2026-04-16 23:04:08,877 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.810 
+class optimal path points weight: 0.672, IoU: 0.582 
+
+2026-04-16 23:04:08,877 - Model - INFO - Eval mean loss: 0.367112
+2026-04-16 23:04:08,877 - Model - INFO - Eval accuracy: 0.780573
+2026-04-16 23:04:08,877 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 23:04:08,877 - Model - INFO - **** Epoch 77 (77/100) ****
+2026-04-16 23:04:08,877 - Model - INFO - Learning rate:0.000082
+2026-04-16 23:04:37,917 - Model - INFO - Training mean loss: 0.358981
+2026-04-16 23:04:37,917 - Model - INFO - Training accuracy: 0.840585
+2026-04-16 23:04:37,921 - Model - INFO - ---- EPOCH 077 EVALUATION ----
+2026-04-16 23:04:40,735 - Model - INFO - eval mean loss: 0.363203
+2026-04-16 23:04:40,735 - Model - INFO - eval point avg class IoU: 0.699565
+2026-04-16 23:04:40,735 - Model - INFO - eval point accuracy: 0.779593
+2026-04-16 23:04:40,735 - Model - INFO - eval point avg class acc: 0.804072
+2026-04-16 23:04:40,735 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.806 
+class optimal path points weight: 0.672, IoU: 0.594 
+
+2026-04-16 23:04:40,736 - Model - INFO - Eval mean loss: 0.363203
+2026-04-16 23:04:40,736 - Model - INFO - Eval accuracy: 0.779593
+2026-04-16 23:04:40,736 - Model - INFO - Best Optimal Path IoU: 0.598147
+2026-04-16 23:04:40,736 - Model - INFO - **** Epoch 78 (78/100) ****
+2026-04-16 23:04:40,736 - Model - INFO - Learning rate:0.000082
+2026-04-16 23:05:09,759 - Model - INFO - Training mean loss: 0.361343
+2026-04-16 23:05:09,759 - Model - INFO - Training accuracy: 0.840364
+2026-04-16 23:05:09,764 - Model - INFO - ---- EPOCH 078 EVALUATION ----
+2026-04-16 23:05:12,558 - Model - INFO - eval mean loss: 0.369041
+2026-04-16 23:05:12,558 - Model - INFO - eval point avg class IoU: 0.698226
+2026-04-16 23:05:12,558 - Model - INFO - eval point accuracy: 0.773456
+2026-04-16 23:05:12,558 - Model - INFO - eval point avg class acc: 0.815643
+2026-04-16 23:05:12,558 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.791 
+class optimal path points weight: 0.672, IoU: 0.605 
+
+2026-04-16 23:05:12,560 - Model - INFO - Eval mean loss: 0.369041
+2026-04-16 23:05:12,560 - Model - INFO - Eval accuracy: 0.773456
+2026-04-16 23:05:12,560 - Model - INFO - Save model...
+2026-04-16 23:05:12,560 - Model - INFO - Saving at results/model_training/pointnet2_3d/checkpoints/best_pointnet2_3d.pth
+2026-04-16 23:05:12,597 - Model - INFO - Saving model....
+2026-04-16 23:05:12,597 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:05:12,597 - Model - INFO - **** Epoch 79 (79/100) ****
+2026-04-16 23:05:12,597 - Model - INFO - Learning rate:0.000082
+2026-04-16 23:05:41,640 - Model - INFO - Training mean loss: 0.361401
+2026-04-16 23:05:41,641 - Model - INFO - Training accuracy: 0.840592
+2026-04-16 23:05:41,644 - Model - INFO - ---- EPOCH 079 EVALUATION ----
+2026-04-16 23:05:44,446 - Model - INFO - eval mean loss: 0.366219
+2026-04-16 23:05:44,447 - Model - INFO - eval point avg class IoU: 0.700852
+2026-04-16 23:05:44,447 - Model - INFO - eval point accuracy: 0.781741
+2026-04-16 23:05:44,447 - Model - INFO - eval point avg class acc: 0.802004
+2026-04-16 23:05:44,447 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.810 
+class optimal path points weight: 0.672, IoU: 0.592 
+
+2026-04-16 23:05:44,447 - Model - INFO - Eval mean loss: 0.366219
+2026-04-16 23:05:44,447 - Model - INFO - Eval accuracy: 0.781741
+2026-04-16 23:05:44,447 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:05:44,447 - Model - INFO - **** Epoch 80 (80/100) ****
+2026-04-16 23:05:44,447 - Model - INFO - Learning rate:0.000082
+2026-04-16 23:06:13,286 - Model - INFO - Training mean loss: 0.360555
+2026-04-16 23:06:13,286 - Model - INFO - Training accuracy: 0.841172
+2026-04-16 23:06:13,290 - Model - INFO - ---- EPOCH 080 EVALUATION ----
+2026-04-16 23:06:15,443 - Model - INFO - eval mean loss: 0.364183
+2026-04-16 23:06:15,443 - Model - INFO - eval point avg class IoU: 0.697815
+2026-04-16 23:06:15,443 - Model - INFO - eval point accuracy: 0.776929
+2026-04-16 23:06:15,443 - Model - INFO - eval point avg class acc: 0.806491
+2026-04-16 23:06:15,443 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.800 
+class optimal path points weight: 0.672, IoU: 0.595 
+
+2026-04-16 23:06:15,444 - Model - INFO - Eval mean loss: 0.364183
+2026-04-16 23:06:15,444 - Model - INFO - Eval accuracy: 0.776929
+2026-04-16 23:06:15,444 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:06:15,444 - Model - INFO - **** Epoch 81 (81/100) ****
+2026-04-16 23:06:15,444 - Model - INFO - Learning rate:0.000058
+2026-04-16 23:06:39,689 - Model - INFO - Training mean loss: 0.361185
+2026-04-16 23:06:39,689 - Model - INFO - Training accuracy: 0.841268
+2026-04-16 23:06:39,695 - Model - INFO - ---- EPOCH 081 EVALUATION ----
+2026-04-16 23:06:42,268 - Model - INFO - eval mean loss: 0.364759
+2026-04-16 23:06:42,269 - Model - INFO - eval point avg class IoU: 0.695758
+2026-04-16 23:06:42,269 - Model - INFO - eval point accuracy: 0.778482
+2026-04-16 23:06:42,269 - Model - INFO - eval point avg class acc: 0.799391
+2026-04-16 23:06:42,269 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.586 
+
+2026-04-16 23:06:42,269 - Model - INFO - Eval mean loss: 0.364759
+2026-04-16 23:06:42,269 - Model - INFO - Eval accuracy: 0.778482
+2026-04-16 23:06:42,269 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:06:42,269 - Model - INFO - **** Epoch 82 (82/100) ****
+2026-04-16 23:06:42,269 - Model - INFO - Learning rate:0.000058
+2026-04-16 23:07:10,310 - Model - INFO - Training mean loss: 0.359180
+2026-04-16 23:07:10,310 - Model - INFO - Training accuracy: 0.840511
+2026-04-16 23:07:10,314 - Model - INFO - ---- EPOCH 082 EVALUATION ----
+2026-04-16 23:07:13,092 - Model - INFO - eval mean loss: 0.362685
+2026-04-16 23:07:13,092 - Model - INFO - eval point avg class IoU: 0.700861
+2026-04-16 23:07:13,092 - Model - INFO - eval point accuracy: 0.779520
+2026-04-16 23:07:13,092 - Model - INFO - eval point avg class acc: 0.806671
+2026-04-16 23:07:13,092 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.597 
+
+2026-04-16 23:07:13,092 - Model - INFO - Eval mean loss: 0.362685
+2026-04-16 23:07:13,092 - Model - INFO - Eval accuracy: 0.779520
+2026-04-16 23:07:13,092 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:07:13,092 - Model - INFO - **** Epoch 83 (83/100) ****
+2026-04-16 23:07:13,092 - Model - INFO - Learning rate:0.000058
+2026-04-16 23:07:42,108 - Model - INFO - Training mean loss: 0.360265
+2026-04-16 23:07:42,108 - Model - INFO - Training accuracy: 0.840835
+2026-04-16 23:07:42,112 - Model - INFO - ---- EPOCH 083 EVALUATION ----
+2026-04-16 23:07:44,918 - Model - INFO - eval mean loss: 0.365654
+2026-04-16 23:07:44,919 - Model - INFO - eval point avg class IoU: 0.702353
+2026-04-16 23:07:44,919 - Model - INFO - eval point accuracy: 0.779224
+2026-04-16 23:07:44,919 - Model - INFO - eval point avg class acc: 0.810234
+2026-04-16 23:07:44,919 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.803 
+class optimal path points weight: 0.672, IoU: 0.602 
+
+2026-04-16 23:07:44,919 - Model - INFO - Eval mean loss: 0.365654
+2026-04-16 23:07:44,919 - Model - INFO - Eval accuracy: 0.779224
+2026-04-16 23:07:44,919 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:07:44,919 - Model - INFO - **** Epoch 84 (84/100) ****
+2026-04-16 23:07:44,919 - Model - INFO - Learning rate:0.000058
+2026-04-16 23:08:13,979 - Model - INFO - Training mean loss: 0.359382
+2026-04-16 23:08:13,979 - Model - INFO - Training accuracy: 0.840663
+2026-04-16 23:08:13,983 - Model - INFO - ---- EPOCH 084 EVALUATION ----
+2026-04-16 23:08:16,763 - Model - INFO - eval mean loss: 0.364198
+2026-04-16 23:08:16,763 - Model - INFO - eval point avg class IoU: 0.701809
+2026-04-16 23:08:16,763 - Model - INFO - eval point accuracy: 0.779764
+2026-04-16 23:08:16,763 - Model - INFO - eval point avg class acc: 0.807954
+2026-04-16 23:08:16,763 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.599 
+
+2026-04-16 23:08:16,763 - Model - INFO - Eval mean loss: 0.364198
+2026-04-16 23:08:16,763 - Model - INFO - Eval accuracy: 0.779764
+2026-04-16 23:08:16,763 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:08:16,763 - Model - INFO - **** Epoch 85 (85/100) ****
+2026-04-16 23:08:16,763 - Model - INFO - Learning rate:0.000058
+2026-04-16 23:08:45,773 - Model - INFO - Training mean loss: 0.358872
+2026-04-16 23:08:45,773 - Model - INFO - Training accuracy: 0.841202
+2026-04-16 23:08:45,777 - Model - INFO - ---- EPOCH 085 EVALUATION ----
+2026-04-16 23:08:48,567 - Model - INFO - eval mean loss: 0.369120
+2026-04-16 23:08:48,567 - Model - INFO - eval point avg class IoU: 0.696354
+2026-04-16 23:08:48,567 - Model - INFO - eval point accuracy: 0.777658
+2026-04-16 23:08:48,567 - Model - INFO - eval point avg class acc: 0.802150
+2026-04-16 23:08:48,567 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.803 
+class optimal path points weight: 0.672, IoU: 0.590 
+
+2026-04-16 23:08:48,567 - Model - INFO - Eval mean loss: 0.369120
+2026-04-16 23:08:48,567 - Model - INFO - Eval accuracy: 0.777658
+2026-04-16 23:08:48,567 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:08:48,567 - Model - INFO - **** Epoch 86 (86/100) ****
+2026-04-16 23:08:48,567 - Model - INFO - Learning rate:0.000058
+2026-04-16 23:09:17,545 - Model - INFO - Training mean loss: 0.359784
+2026-04-16 23:09:17,545 - Model - INFO - Training accuracy: 0.840848
+2026-04-16 23:09:17,550 - Model - INFO - ---- EPOCH 086 EVALUATION ----
+2026-04-16 23:09:20,346 - Model - INFO - eval mean loss: 0.368595
+2026-04-16 23:09:20,347 - Model - INFO - eval point avg class IoU: 0.696523
+2026-04-16 23:09:20,347 - Model - INFO - eval point accuracy: 0.777582
+2026-04-16 23:09:20,347 - Model - INFO - eval point avg class acc: 0.802623
+2026-04-16 23:09:20,347 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.803 
+class optimal path points weight: 0.672, IoU: 0.590 
+
+2026-04-16 23:09:20,347 - Model - INFO - Eval mean loss: 0.368595
+2026-04-16 23:09:20,347 - Model - INFO - Eval accuracy: 0.777582
+2026-04-16 23:09:20,347 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:09:20,347 - Model - INFO - **** Epoch 87 (87/100) ****
+2026-04-16 23:09:20,347 - Model - INFO - Learning rate:0.000058
+2026-04-16 23:09:49,841 - Model - INFO - Training mean loss: 0.359077
+2026-04-16 23:09:49,841 - Model - INFO - Training accuracy: 0.841262
+2026-04-16 23:09:49,845 - Model - INFO - ---- EPOCH 087 EVALUATION ----
+2026-04-16 23:09:52,735 - Model - INFO - eval mean loss: 0.367142
+2026-04-16 23:09:52,735 - Model - INFO - eval point avg class IoU: 0.697455
+2026-04-16 23:09:52,735 - Model - INFO - eval point accuracy: 0.779312
+2026-04-16 23:09:52,735 - Model - INFO - eval point avg class acc: 0.800785
+2026-04-16 23:09:52,735 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.806 
+class optimal path points weight: 0.672, IoU: 0.589 
+
+2026-04-16 23:09:52,736 - Model - INFO - Eval mean loss: 0.367142
+2026-04-16 23:09:52,736 - Model - INFO - Eval accuracy: 0.779312
+2026-04-16 23:09:52,736 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:09:52,736 - Model - INFO - **** Epoch 88 (88/100) ****
+2026-04-16 23:09:52,736 - Model - INFO - Learning rate:0.000058
+2026-04-16 23:10:22,966 - Model - INFO - Training mean loss: 0.359219
+2026-04-16 23:10:22,966 - Model - INFO - Training accuracy: 0.841232
+2026-04-16 23:10:22,970 - Model - INFO - ---- EPOCH 088 EVALUATION ----
+2026-04-16 23:10:25,874 - Model - INFO - eval mean loss: 0.370209
+2026-04-16 23:10:25,875 - Model - INFO - eval point avg class IoU: 0.697433
+2026-04-16 23:10:25,875 - Model - INFO - eval point accuracy: 0.778183
+2026-04-16 23:10:25,875 - Model - INFO - eval point avg class acc: 0.803061
+2026-04-16 23:10:25,875 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.803 
+class optimal path points weight: 0.672, IoU: 0.591 
+
+2026-04-16 23:10:25,875 - Model - INFO - Eval mean loss: 0.370209
+2026-04-16 23:10:25,875 - Model - INFO - Eval accuracy: 0.778183
+2026-04-16 23:10:25,875 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:10:25,875 - Model - INFO - **** Epoch 89 (89/100) ****
+2026-04-16 23:10:25,875 - Model - INFO - Learning rate:0.000058
+2026-04-16 23:10:56,115 - Model - INFO - Training mean loss: 0.359266
+2026-04-16 23:10:56,115 - Model - INFO - Training accuracy: 0.840920
+2026-04-16 23:10:56,119 - Model - INFO - ---- EPOCH 089 EVALUATION ----
+2026-04-16 23:10:59,026 - Model - INFO - eval mean loss: 0.370676
+2026-04-16 23:10:59,026 - Model - INFO - eval point avg class IoU: 0.697284
+2026-04-16 23:10:59,026 - Model - INFO - eval point accuracy: 0.777017
+2026-04-16 23:10:59,026 - Model - INFO - eval point avg class acc: 0.805268
+2026-04-16 23:10:59,026 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.801 
+class optimal path points weight: 0.672, IoU: 0.594 
+
+2026-04-16 23:10:59,026 - Model - INFO - Eval mean loss: 0.370676
+2026-04-16 23:10:59,026 - Model - INFO - Eval accuracy: 0.777017
+2026-04-16 23:10:59,026 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:10:59,026 - Model - INFO - **** Epoch 90 (90/100) ****
+2026-04-16 23:10:59,026 - Model - INFO - Learning rate:0.000058
+2026-04-16 23:11:29,288 - Model - INFO - Training mean loss: 0.359419
+2026-04-16 23:11:29,288 - Model - INFO - Training accuracy: 0.840588
+2026-04-16 23:11:29,292 - Model - INFO - ---- EPOCH 090 EVALUATION ----
+2026-04-16 23:11:32,176 - Model - INFO - eval mean loss: 0.369719
+2026-04-16 23:11:32,176 - Model - INFO - eval point avg class IoU: 0.695956
+2026-04-16 23:11:32,176 - Model - INFO - eval point accuracy: 0.778528
+2026-04-16 23:11:32,176 - Model - INFO - eval point avg class acc: 0.799656
+2026-04-16 23:11:32,176 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.587 
+
+2026-04-16 23:11:32,177 - Model - INFO - Eval mean loss: 0.369719
+2026-04-16 23:11:32,177 - Model - INFO - Eval accuracy: 0.778528
+2026-04-16 23:11:32,177 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:11:32,177 - Model - INFO - **** Epoch 91 (91/100) ****
+2026-04-16 23:11:32,177 - Model - INFO - Learning rate:0.000040
+2026-04-16 23:12:02,462 - Model - INFO - Training mean loss: 0.358158
+2026-04-16 23:12:02,462 - Model - INFO - Training accuracy: 0.841765
+2026-04-16 23:12:02,467 - Model - INFO - ---- EPOCH 091 EVALUATION ----
+2026-04-16 23:12:05,394 - Model - INFO - eval mean loss: 0.366421
+2026-04-16 23:12:05,395 - Model - INFO - eval point avg class IoU: 0.699614
+2026-04-16 23:12:05,395 - Model - INFO - eval point accuracy: 0.779626
+2026-04-16 23:12:05,395 - Model - INFO - eval point avg class acc: 0.804092
+2026-04-16 23:12:05,395 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.806 
+class optimal path points weight: 0.672, IoU: 0.594 
+
+2026-04-16 23:12:05,395 - Model - INFO - Eval mean loss: 0.366421
+2026-04-16 23:12:05,396 - Model - INFO - Eval accuracy: 0.779626
+2026-04-16 23:12:05,396 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:12:05,396 - Model - INFO - **** Epoch 92 (92/100) ****
+2026-04-16 23:12:05,396 - Model - INFO - Learning rate:0.000040
+2026-04-16 23:12:35,652 - Model - INFO - Training mean loss: 0.358811
+2026-04-16 23:12:35,652 - Model - INFO - Training accuracy: 0.841013
+2026-04-16 23:12:35,656 - Model - INFO - ---- EPOCH 092 EVALUATION ----
+2026-04-16 23:12:38,615 - Model - INFO - eval mean loss: 0.367682
+2026-04-16 23:12:38,615 - Model - INFO - eval point avg class IoU: 0.698242
+2026-04-16 23:12:38,615 - Model - INFO - eval point accuracy: 0.778625
+2026-04-16 23:12:38,615 - Model - INFO - eval point avg class acc: 0.803642
+2026-04-16 23:12:38,615 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.804 
+class optimal path points weight: 0.672, IoU: 0.592 
+
+2026-04-16 23:12:38,615 - Model - INFO - Eval mean loss: 0.367682
+2026-04-16 23:12:38,615 - Model - INFO - Eval accuracy: 0.778625
+2026-04-16 23:12:38,615 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:12:38,615 - Model - INFO - **** Epoch 93 (93/100) ****
+2026-04-16 23:12:38,615 - Model - INFO - Learning rate:0.000040
+2026-04-16 23:13:08,611 - Model - INFO - Training mean loss: 0.359015
+2026-04-16 23:13:08,611 - Model - INFO - Training accuracy: 0.841663
+2026-04-16 23:13:08,615 - Model - INFO - ---- EPOCH 093 EVALUATION ----
+2026-04-16 23:13:11,411 - Model - INFO - eval mean loss: 0.367756
+2026-04-16 23:13:11,411 - Model - INFO - eval point avg class IoU: 0.698475
+2026-04-16 23:13:11,411 - Model - INFO - eval point accuracy: 0.779346
+2026-04-16 23:13:11,411 - Model - INFO - eval point avg class acc: 0.802572
+2026-04-16 23:13:11,411 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.806 
+class optimal path points weight: 0.672, IoU: 0.591 
+
+2026-04-16 23:13:11,411 - Model - INFO - Eval mean loss: 0.367756
+2026-04-16 23:13:11,411 - Model - INFO - Eval accuracy: 0.779346
+2026-04-16 23:13:11,411 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:13:11,411 - Model - INFO - **** Epoch 94 (94/100) ****
+2026-04-16 23:13:11,411 - Model - INFO - Learning rate:0.000040
+2026-04-16 23:13:36,657 - Model - INFO - Training mean loss: 0.357622
+2026-04-16 23:13:36,657 - Model - INFO - Training accuracy: 0.841629
+2026-04-16 23:13:36,661 - Model - INFO - ---- EPOCH 094 EVALUATION ----
+2026-04-16 23:13:38,847 - Model - INFO - eval mean loss: 0.363854
+2026-04-16 23:13:38,847 - Model - INFO - eval point avg class IoU: 0.700798
+2026-04-16 23:13:38,847 - Model - INFO - eval point accuracy: 0.779819
+2026-04-16 23:13:38,847 - Model - INFO - eval point avg class acc: 0.805903
+2026-04-16 23:13:38,847 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.596 
+
+2026-04-16 23:13:38,847 - Model - INFO - Eval mean loss: 0.363854
+2026-04-16 23:13:38,847 - Model - INFO - Eval accuracy: 0.779819
+2026-04-16 23:13:38,847 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:13:38,847 - Model - INFO - **** Epoch 95 (95/100) ****
+2026-04-16 23:13:38,847 - Model - INFO - Learning rate:0.000040
+2026-04-16 23:14:01,533 - Model - INFO - Training mean loss: 0.357800
+2026-04-16 23:14:01,533 - Model - INFO - Training accuracy: 0.841084
+2026-04-16 23:14:01,538 - Model - INFO - ---- EPOCH 095 EVALUATION ----
+2026-04-16 23:14:03,719 - Model - INFO - eval mean loss: 0.362996
+2026-04-16 23:14:03,719 - Model - INFO - eval point avg class IoU: 0.703715
+2026-04-16 23:14:03,719 - Model - INFO - eval point accuracy: 0.780331
+2026-04-16 23:14:03,719 - Model - INFO - eval point avg class acc: 0.810391
+2026-04-16 23:14:03,719 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.603 
+
+2026-04-16 23:14:03,719 - Model - INFO - Eval mean loss: 0.362996
+2026-04-16 23:14:03,719 - Model - INFO - Eval accuracy: 0.780331
+2026-04-16 23:14:03,719 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:14:03,719 - Model - INFO - **** Epoch 96 (96/100) ****
+2026-04-16 23:14:03,719 - Model - INFO - Learning rate:0.000040
+2026-04-16 23:14:26,403 - Model - INFO - Training mean loss: 0.357299
+2026-04-16 23:14:26,404 - Model - INFO - Training accuracy: 0.840980
+2026-04-16 23:14:26,408 - Model - INFO - ---- EPOCH 096 EVALUATION ----
+2026-04-16 23:14:28,598 - Model - INFO - eval mean loss: 0.368070
+2026-04-16 23:14:28,598 - Model - INFO - eval point avg class IoU: 0.698549
+2026-04-16 23:14:28,598 - Model - INFO - eval point accuracy: 0.776965
+2026-04-16 23:14:28,598 - Model - INFO - eval point avg class acc: 0.807847
+2026-04-16 23:14:28,598 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.800 
+class optimal path points weight: 0.672, IoU: 0.597 
+
+2026-04-16 23:14:28,598 - Model - INFO - Eval mean loss: 0.368070
+2026-04-16 23:14:28,598 - Model - INFO - Eval accuracy: 0.776965
+2026-04-16 23:14:28,598 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:14:28,598 - Model - INFO - **** Epoch 97 (97/100) ****
+2026-04-16 23:14:28,598 - Model - INFO - Learning rate:0.000040
+2026-04-16 23:14:51,285 - Model - INFO - Training mean loss: 0.358620
+2026-04-16 23:14:51,285 - Model - INFO - Training accuracy: 0.841365
+2026-04-16 23:14:51,289 - Model - INFO - ---- EPOCH 097 EVALUATION ----
+2026-04-16 23:14:53,477 - Model - INFO - eval mean loss: 0.365444
+2026-04-16 23:14:53,477 - Model - INFO - eval point avg class IoU: 0.698539
+2026-04-16 23:14:53,477 - Model - INFO - eval point accuracy: 0.777075
+2026-04-16 23:14:53,477 - Model - INFO - eval point avg class acc: 0.807581
+2026-04-16 23:14:53,477 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.800 
+class optimal path points weight: 0.672, IoU: 0.597 
+
+2026-04-16 23:14:53,478 - Model - INFO - Eval mean loss: 0.365444
+2026-04-16 23:14:53,478 - Model - INFO - Eval accuracy: 0.777075
+2026-04-16 23:14:53,478 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:14:53,478 - Model - INFO - **** Epoch 98 (98/100) ****
+2026-04-16 23:14:53,478 - Model - INFO - Learning rate:0.000040
+2026-04-16 23:15:16,161 - Model - INFO - Training mean loss: 0.356743
+2026-04-16 23:15:16,161 - Model - INFO - Training accuracy: 0.841640
+2026-04-16 23:15:16,165 - Model - INFO - ---- EPOCH 098 EVALUATION ----
+2026-04-16 23:15:18,353 - Model - INFO - eval mean loss: 0.366675
+2026-04-16 23:15:18,353 - Model - INFO - eval point avg class IoU: 0.700861
+2026-04-16 23:15:18,353 - Model - INFO - eval point accuracy: 0.779822
+2026-04-16 23:15:18,353 - Model - INFO - eval point avg class acc: 0.806015
+2026-04-16 23:15:18,353 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.596 
+
+2026-04-16 23:15:18,353 - Model - INFO - Eval mean loss: 0.366675
+2026-04-16 23:15:18,353 - Model - INFO - Eval accuracy: 0.779822
+2026-04-16 23:15:18,353 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:15:18,353 - Model - INFO - **** Epoch 99 (99/100) ****
+2026-04-16 23:15:18,353 - Model - INFO - Learning rate:0.000040
+2026-04-16 23:15:41,031 - Model - INFO - Training mean loss: 0.357038
+2026-04-16 23:15:41,031 - Model - INFO - Training accuracy: 0.841805
+2026-04-16 23:15:41,035 - Model - INFO - ---- EPOCH 099 EVALUATION ----
+2026-04-16 23:15:43,224 - Model - INFO - eval mean loss: 0.370997
+2026-04-16 23:15:43,224 - Model - INFO - eval point avg class IoU: 0.699699
+2026-04-16 23:15:43,225 - Model - INFO - eval point accuracy: 0.780093
+2026-04-16 23:15:43,225 - Model - INFO - eval point avg class acc: 0.803276
+2026-04-16 23:15:43,225 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.807 
+class optimal path points weight: 0.672, IoU: 0.593 
+
+2026-04-16 23:15:43,225 - Model - INFO - Eval mean loss: 0.370997
+2026-04-16 23:15:43,225 - Model - INFO - Eval accuracy: 0.780093
+2026-04-16 23:15:43,225 - Model - INFO - Best Optimal Path IoU: 0.605201
+2026-04-16 23:15:43,225 - Model - INFO - **** Epoch 100 (100/100) ****
+2026-04-16 23:15:43,225 - Model - INFO - Learning rate:0.000040
+2026-04-16 23:16:05,920 - Model - INFO - Training mean loss: 0.359169
+2026-04-16 23:16:05,921 - Model - INFO - Training accuracy: 0.840837
+2026-04-16 23:16:05,924 - Model - INFO - ---- EPOCH 100 EVALUATION ----
+2026-04-16 23:16:08,110 - Model - INFO - eval mean loss: 0.364954
+2026-04-16 23:16:08,110 - Model - INFO - eval point avg class IoU: 0.699658
+2026-04-16 23:16:08,110 - Model - INFO - eval point accuracy: 0.779214
+2026-04-16 23:16:08,110 - Model - INFO - eval point avg class acc: 0.805048
+2026-04-16 23:16:08,110 - Model - INFO - ------- IoU --------
+class other free points weight: 0.328, IoU: 0.805 
+class optimal path points weight: 0.672, IoU: 0.595 
+
+2026-04-16 23:16:08,110 - Model - INFO - Eval mean loss: 0.364954
+2026-04-16 23:16:08,110 - Model - INFO - Eval accuracy: 0.779214
+2026-04-16 23:16:08,110 - Model - INFO - Best Optimal Path IoU: 0.605201

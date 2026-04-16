@@ -73,3 +73,68 @@ def parse_urdf(urdf_path):
     return links, joints
 
 
+def _parse_float_list(text, expected_len=None):
+    if text is None:
+        return None
+    vals = [float(v) for v in str(text).split()]
+    if expected_len is not None and len(vals) != expected_len:
+        return None
+    return vals
+
+
+def get_robot_collision_bodies(world_collisions):
+    """
+    从 FK 输出的 world_collisions 中提取可用于碰撞检测的几何体。
+    返回 list[dict]，元素格式兼容 points_in_robot_arm_3d:
+      - sphere: {type, transform, radius}
+      - cylinder: {type, transform, radius, length}
+    """
+    bodies = []
+    if not world_collisions:
+        return bodies
+
+    for col in world_collisions:
+        geometry = col.get('geometry', {})
+        gtype = geometry.get('type')
+        transform = np.asarray(col.get('transform', np.eye(4)), dtype=float)
+
+        if gtype == 'sphere':
+            radius = geometry.get('radius')
+            if radius is None:
+                continue
+            bodies.append({
+                'type': 'sphere',
+                'transform': transform,
+                'radius': float(radius),
+            })
+            continue
+
+        if gtype == 'cylinder':
+            radius = geometry.get('radius')
+            length = geometry.get('length')
+            if radius is None or length is None:
+                continue
+            bodies.append({
+                'type': 'cylinder',
+                'transform': transform,
+                'radius': float(radius),
+                'length': float(length),
+            })
+            continue
+
+        # 对 box 采用外接球近似，保持下游接口兼容。
+        if gtype == 'box':
+            size_str = geometry.get('size')
+            size = _parse_float_list(size_str, expected_len=3)
+            if size is None:
+                continue
+            radius = 0.5 * float(np.linalg.norm(np.asarray(size, dtype=float)))
+            bodies.append({
+                'type': 'sphere',
+                'transform': transform,
+                'radius': radius,
+            })
+
+    return bodies
+
+

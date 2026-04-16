@@ -1,12 +1,4 @@
-"""
-对 data/env/ 中的每个场景文件执行运动规划验证。
-流程: 加载场景 → IK 求解起/终点 → RRT-Connect 规划
-规划失败的场景文件将被删除，最后对剩余文件重新编号。
 
-用法:
-    python generate_env_raw.py                  # 验证全部场景
-    python generate_env_raw.py --start 0 --end 100   # 验证 [0, 100) 范围
-"""
 import json
 import os
 import sys
@@ -20,11 +12,12 @@ URDF_PATH = os.path.join(_PROJECT_ROOT, "src", "robots", "franka_panda_gem.urdf"
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from robot_utils.urdf_to_geometry import parse_urdf
-from robot_utils.fk_solver import compute_fk
-from robot_utils.ik_solver import solve_ik_multi_start
+from robot_utils.compute_kinematic import compute_fk
+from robot_utils.compute_kinematic import compute_ik
+from robot_utils.compute_kinematic import get_pinocchio_instance
 from robot_utils.rrt_connect import RRTConnect
 
-# ───────── Franka Panda 关节限位 ─────────
+
 JOINT_LIMITS = np.array([
     [-2.9007, 2.9007],
     [-1.8361, 1.8361],
@@ -35,9 +28,9 @@ JOINT_LIMITS = np.array([
     [-3.0508, 3.0508],
 ])
 
-
+#get ee link name from urdf joints
 def get_ee_link(joints):
-    """沿 fixed 关节链追到运动链末端"""
+
     revolute = [j for j in joints if j['type'] in ('revolute', 'continuous')]
     ee_link = revolute[-1]['child']
     while True:
@@ -45,24 +38,29 @@ def get_ee_link(joints):
         if child_joint is None:
             break
         ee_link = child_joint['child']
+
+
     return ee_link
 
 
-def validate_scene(links, joints, ee_link, scene_path):
-    """
-    验证单个场景是否可规划。
-    返回 True 表示规划成功，False 表示应删除。
-    """
+#数据集清洗
+def validate_scene(links, joints, ee_link, scene_path, urdf_path):
+   
     with open(scene_path, 'r') as f:
         data = json.load(f)
+    #load data 
 
     obstacles = data['obstacles']
     start_pos = np.array(data['start_pos'])
     goal_pos = np.array(data['goal_pos'])
+
+    #regulate base pos 
     base_pos = tuple(data.get('robot_base_pos', [0.0, 0.0, 0.0]))
 
+    #load arm data 
     revolute = [j for j in joints if j['type'] in ('revolute', 'continuous')]
     n_dof = len(revolute)
+
 
     # 构建碰撞检查器
     col_checker = RRTConnect(
@@ -70,34 +68,37 @@ def validate_scene(links, joints, ee_link, scene_path):
         step_len=0.1, iter_max=1,
         links=links, joints=joints, obstacles=obstacles,
         clearance=0.05, base_pos=base_pos, joint_limits=JOINT_LIMITS,
+        urdf_path=urdf_path,
     )
 
     # IK 求解起点
-    q_start, ok_s = solve_ik_multi_start(
+    q_start, ok_s = compute_ik(
         links, joints, start_pos, base_pos=base_pos,
         joint_limits=JOINT_LIMITS, n_starts=50, tol=0.01, ee_link=ee_link,
         collision_checker=col_checker.is_collision_free,
+        urdf_path=urdf_path,
     )
     if not ok_s:
         if q_start is None:
             return False
         ja = {revolute[k]['name']: q_start[k] for k in range(n_dof)}
-        _, lt, _ = compute_fk(links, joints, joint_angles=ja, base_pos=base_pos)
+        _, lt, _ = compute_fk(links, joints, joint_angles=ja, base_pos=base_pos, urdf_path=urdf_path)
         err = np.linalg.norm(lt[ee_link][:3, 3] - start_pos)
         if err > 0.05:
             return False
 
     # IK 求解终点
-    q_goal, ok_g = solve_ik_multi_start(
+    q_goal, ok_g = compute_ik(
         links, joints, goal_pos, base_pos=base_pos,
         joint_limits=JOINT_LIMITS, n_starts=50, tol=0.01, ee_link=ee_link,
         collision_checker=col_checker.is_collision_free,
+        urdf_path=urdf_path,
     )
     if not ok_g:
         if q_goal is None:
             return False
         ja = {revolute[k]['name']: q_goal[k] for k in range(n_dof)}
-        _, lt, _ = compute_fk(links, joints, joint_angles=ja, base_pos=base_pos)
+        _, lt, _ = compute_fk(links, joints, joint_angles=ja, base_pos=base_pos, urdf_path=urdf_path)
         err = np.linalg.norm(lt[ee_link][:3, 3] - goal_pos)
         if err > 0.05:
             return False
@@ -108,6 +109,7 @@ def validate_scene(links, joints, ee_link, scene_path):
         step_len=0.1, iter_max=5000,
         links=links, joints=joints, obstacles=obstacles,
         clearance=0.05, base_pos=base_pos, joint_limits=JOINT_LIMITS,
+        urdf_path=urdf_path,
     )
     path = planner.planning()
     if path is None or len(path) == 0:
@@ -115,9 +117,12 @@ def validate_scene(links, joints, ee_link, scene_path):
 
     # 规划成功后，保存末端轨迹到场景文件
     ee_path = []
+    
     for q in path:
         joint_angles = {revolute[k]['name']: q[k] for k in range(n_dof)}
-        _, link_transforms, _ = compute_fk(links, joints, joint_angles=joint_angles, base_pos=base_pos)
+        _, link_transforms, _ = compute_fk(
+            links, joints, joint_angles=joint_angles, base_pos=base_pos, urdf_path=urdf_path
+        )
         ee_pos = link_transforms[ee_link][:3, 3]
         ee_path.append(ee_pos.tolist())
 
@@ -165,6 +170,7 @@ def main():
 
     print(f"共 {len(all_files)} 个场景待验证")
 
+    # 先做一次运动学后端检查，避免跑到后面才因为环境问题失败。
     # 解析 URDF（只需一次）
     links, joints = parse_urdf(URDF_PATH)
     ee_link = get_ee_link(joints)
@@ -177,9 +183,13 @@ def main():
     for i, scene_path in enumerate(all_files):
         scene_name = os.path.basename(scene_path)
         try:
-            ok = validate_scene(links, joints, ee_link, scene_path)
+            ok = validate_scene(links, joints, ee_link, scene_path, URDF_PATH)
         except Exception as e:
             print(f"  [{i+1}/{len(all_files)}] {scene_name}: 异常 - {e}")
+            # 对环境/依赖问题直接终止，避免把大量场景误判为失败并删除。
+            if "buildModelFromUrdf" in str(e) or "pinocchio" in str(e).lower():
+                print("检测到 Pinocchio 环境异常，提前终止，未继续删除后续场景。")
+                break
             ok = False
 
         if ok:

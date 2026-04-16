@@ -9,13 +9,15 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from planning_utils.collision_check_utils import points_in_AABB_3d, points_in_ball_3d, points_in_cylinder_3d, points_in_robot_arm_3d
 from robot_utils.urdf_to_geometry import parse_urdf, get_robot_collision_bodies
-from robot_utils.fk_solver import compute_fk
+from robot_utils.compute_kinematic import compute_fk
 
 
 def check_point_in_obstacles(point, obstacles, clearance=0.0):
 
     point_tuple = tuple(point.tolist())
+
     boxes, spheres, cylinders = [], [], []
+    
     for obs in obstacles:
         pos = np.array(obs['pos'])
         if obs['type'] == 'box':
@@ -243,9 +245,16 @@ if __name__ == "__main__":
             bounds[2],
         ])
         links, joints = parse_urdf(urdf_full)
-        _, _, world_collisions = compute_fk(links, joints, base_pos=tuple(base_pos))
-        robot_collision_bodies = get_robot_collision_bodies(world_collisions)
-        print(f"已加载机械臂碰撞体: {len(robot_collision_bodies)} 个")
+        try:
+            _, _, world_collisions = compute_fk(
+                links, joints, base_pos=tuple(base_pos), urdf_path=urdf_full
+            )
+            robot_collision_bodies = get_robot_collision_bodies(world_collisions)
+            print(f"已加载机械臂碰撞体: {len(robot_collision_bodies)} 个")
+        except Exception as e:
+            robot_collision_bodies = None
+            print("警告: 机械臂碰撞体初始化失败，将跳过机械臂占位碰撞约束")
+            print(f"      失败原因: {e}")
 
     if len(sys.argv) > 1:
         try:

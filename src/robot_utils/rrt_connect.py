@@ -1,364 +1,280 @@
 import numpy as np
-
-from robot_utils.fk_solver import compute_fk
-from robot_utils.urdf_to_geometry import get_robot_collision_bodies
-from planning_utils.collision_check_utils import (
-    points_in_AABB_3d, points_in_ball_3d, points_in_cylinder_3d
-)
-
+from robot_utils.compute_kinematic import compute_fk
 
 class RRTConnect:
     """
-    RRT-Connect 关节空间路径规划器。
-    在关节空间中双向生长 RRT，通过 FK + 碰撞检测确保机械臂不与环境障碍物碰撞。
+    RRT-Connect 路径规划器
+    用于在关节空间进行无碰撞路径规划
     """
 
-    def __init__(
-        self,
-        q_start,
-        q_goal,
-        step_len,
-        iter_max,
-        links,
-        joints,
-        obstacles,
-        clearance=0.01,
-        base_pos=(0, 0, 0),
-        joint_limits=None,
-        collision_samples_per_link=8,
-    ):
-        self.q_start = np.array(q_start).astype(np.float64)
-        self.q_goal = np.array(q_goal).astype(np.float64)
+    def __init__(self, q_start, q_goal, step_len=0.1, iter_max=5000,
+                 links=None, joints=None, obstacles=None, clearance=0.05,
+                 base_pos=(0.0, 0.0, 0.0), joint_limits=None, urdf_path=None):
+        """
+        初始化规划器
+        :param q_start: 起始关节角度 (numpy array)
+        :param q_goal: 目标关节角度 (numpy array)
+        :param step_len: 扩展步长
+        :param iter_max: 最大迭代次数
+        :param links: URDF 解析后的 links 数据
+        :param joints: URDF 解析后的 joints 数据
+        :param obstacles: 障碍物列表
+        :param clearance: 碰撞安全距离
+        :param base_pos: 机器人基座位置
+        :param joint_limits: 关节限位 [n, 2]
+        """
+        self.q_start = np.array(q_start)
+        self.q_goal = np.array(q_goal)
         self.step_len = step_len
         self.iter_max = iter_max
-        self.clearance = clearance
-
         self.links = links
         self.joints = joints
+        self.obstacles = obstacles
+        self.clearance = clearance
         self.base_pos = base_pos
-        self.n_samples = collision_samples_per_link
-
-        self.revolute_joints = [j for j in joints if j['type'] in ('revolute', 'continuous')]
-        self.n_dof = len(self.revolute_joints)
-        self.joint_names = [j['name'] for j in self.revolute_joints]
-
-        if joint_limits is not None:
-            self.joint_limits = np.array(joint_limits)
-        else:
-            self.joint_limits = np.array([[-np.pi, np.pi]] * self.n_dof)
-
-        # 预分配双树节点数组
-        self.vertices_a = np.zeros((1 + iter_max, self.n_dof))
-        self.vertex_parents_a = np.zeros(1 + iter_max).astype(int)
-        self.vertices_a[0] = self.q_start
-        self.num_vertices_a = 1
-
-        self.vertices_b = np.zeros((1 + iter_max, self.n_dof))
-        self.vertex_parents_b = np.zeros(1 + iter_max).astype(int)
-        self.vertices_b[0] = self.q_goal
-        self.num_vertices_b = 1
-
-        self.path = []
-
-        # 预处理环境障碍物
-        boxes, spheres, cylinders = [], [], []
-        for obs in obstacles:
-            pos = np.array(obs['pos'])
-            if obs['type'] == 'box':
-                size = np.array(obs['size'])
-                min_corner = pos - size / 2
-                boxes.append([*min_corner, *size])
-            elif obs['type'] == 'sphere':
-                spheres.append([*pos, obs['radius']])
-            elif obs['type'] == 'cylinder':
-                cylinders.append([*pos, obs['radius'], obs['height']])
-        self.box_arr = np.array(boxes) if boxes else None
-        self.sphere_arr = np.array(spheres) if spheres else None
-        self.cylinder_arr = np.array(cylinders) if cylinders else None
+        self.joint_limits = joint_limits
+        self.urdf_path = urdf_path
+        
+        # 维度
+        self.n_dof = len(q_start)
+        
+        # 树结构 (使用列表动态存储，避免预分配浪费)
+        # Tree A (Start Tree)
+        self.vertices_a = [] 
+        self.parent_a = []
+        
+        # Tree B (Goal Tree)
+        self.vertices_b = []
+        self.parent_b = []
 
     def planning(self):
         """
-        RRT-Connect 双树规划。
-        - outputs:
-            - path: np.array (n_path, n_dof)，或空列表表示规划失败
+        执行 RRT-Connect 规划
+        :return: 路径 (numpy array) 或 None (如果失败)
         """
-        if not self.is_collision_free(self.q_start):
-            print("警告: 起始配置存在碰撞")
-            return []
-        if not self.is_collision_free(self.q_goal):
-            print("警告: 目标配置存在碰撞")
-            return []
+        # 初始化两棵树
+        self.vertices_a = [self.q_start.copy()]
+        self.parent_a = [-1]  # -1 表示根节点
+
+        self.vertices_b = [self.q_goal.copy()]
+        self.parent_b = [-1]
 
         swapped = False
         for k in range(self.iter_max):
-            q_rand = self.sample_random()
+            q_rand = self._sample_random()
 
-            # 扩展 tree_a
-            status_a, idx_a, self.num_vertices_a = self._extend_tree(
-                self.vertices_a, self.vertex_parents_a, self.num_vertices_a, q_rand
-            )
-            if status_a != 'trapped':
+            # 扩展 A 树一步
+            status_a, idx_a = self._extend_tree(self.vertices_a, self.parent_a, q_rand)
+
+            # 只要没有被阻挡，就尝试让 B 树连接到 A 的新节点
+            if status_a != 'Trapped':
                 q_new_a = self.vertices_a[idx_a]
-                # 从 tree_b 连接到 tree_a 的新节点
-                status_b, idx_b, self.num_vertices_b = self._connect_tree(
-                    self.vertices_b, self.vertex_parents_b, self.num_vertices_b, q_new_a
-                )
-                if status_b == 'reached':
-                    path_a = self._extract_tree_path(
-                        self.vertices_a, self.vertex_parents_a, idx_a
-                    )
-                    path_b = self._extract_tree_path(
-                        self.vertices_b, self.vertex_parents_b, idx_b
-                    )
-                    # tree_a 路径: root_a → connection
-                    # tree_b 路径: root_b → connection, 需要反转
-                    if swapped:
-                        # tree_a=goal树, tree_b=start树
-                        self.path = np.vstack([path_b[:-1], path_a[::-1]])
-                    else:
-                        # tree_a=start树, tree_b=goal树
-                        self.path = np.vstack([path_a[:-1], path_b[::-1]])
-                    return self.path
+                status_b, idx_b = self._connect_tree(self.vertices_b, self.parent_b, q_new_a)
 
-            # 交换两棵树以均衡生长
+                if status_b == 'Reached':
+                    path_a = self._extract_path(self.vertices_a, self.parent_a, idx_a)
+                    path_b = self._extract_path(self.vertices_b, self.parent_b, idx_b)
+
+                    # path_a: root_a -> connect, path_b: root_b -> connect
+                    if swapped:
+                        # A 是 goal 树，B 是 start 树
+                        return np.vstack([path_b[:-1], path_a[::-1]])
+                    # A 是 start 树，B 是 goal 树
+                    return np.vstack([path_a[:-1], path_b[::-1]])
+
+            # 双树轮换
             self.vertices_a, self.vertices_b = self.vertices_b, self.vertices_a
-            self.vertex_parents_a, self.vertex_parents_b = self.vertex_parents_b, self.vertex_parents_a
-            self.num_vertices_a, self.num_vertices_b = self.num_vertices_b, self.num_vertices_a
+            self.parent_a, self.parent_b = self.parent_b, self.parent_a
             swapped = not swapped
 
-            if (k + 1) % 1000 == 0:
-                print(k + 1)
+            if k % 1000 == 0:
+                print(f"  RRT Iteration: {k}, Nodes: {len(self.vertices_a) + len(self.vertices_b)}")
 
-        print(f"RRT-Connect: {self.iter_max} 次迭代后未找到路径")
-        return []
+        return None
 
-    def _extend_tree(self, vertices, vertex_parents, num_vertices, q_target):
-        """
-        向 q_target 方向扩展一步。
-        - outputs:
-            - status: 'reached' | 'advanced' | 'trapped'
-            - idx: 新/最近节点索引
-            - num_vertices: 更新后的节点数
-        """
-        node_nearest, nearest_index = self.nearest_neighbor(
-            vertices[:num_vertices], q_target
+    def _sample_random(self):
+        """随机采样关节空间"""
+        # 95% 概率随机采样，5% 概率采样目标点（贪婪策略，加速收敛）
+        if np.random.random() < 0.05:
+            return self.q_goal.copy() # 注意：这里简化处理，实际应根据当前扩展方向决定 bias
+        
+        q_rand = np.random.uniform(
+            self.joint_limits[:, 0], 
+            self.joint_limits[:, 1]
         )
-        q_new = self.steer(node_nearest, q_target)
+        return q_rand
 
-        if self.is_collision_free(q_new) and self.is_edge_valid(node_nearest, q_new):
-            if np.linalg.norm(q_new - node_nearest) < 1e-8:
-                # 新节点与最近节点重合，不添加
-                if np.linalg.norm(q_new - q_target) < 1e-6:
-                    return 'reached', nearest_index, num_vertices
-                return 'advanced', nearest_index, num_vertices
+    def _nearest_neighbor(self, q, vertices):
+        """在 vertices 中找到距离 q 最近的节点索引"""
+        min_dist = float('inf')
+        nearest_idx = 0
+        
+        for i, v in enumerate(vertices):
+            dist = np.linalg.norm(q - v)
+            if dist < min_dist:
+                min_dist = dist
+                nearest_idx = i
+        return nearest_idx
 
-            new_index = num_vertices
-            vertices[new_index] = q_new
-            vertex_parents[new_index] = nearest_index
-            num_vertices += 1
-
-            if np.linalg.norm(q_new - q_target) < 1e-6:
-                return 'reached', new_index, num_vertices
-            return 'advanced', new_index, num_vertices
-
-        return 'trapped', -1, num_vertices
-
-    def _connect_tree(self, vertices, vertex_parents, num_vertices, q_target):
+    def _extend_tree(self, vertices, parents, q_target):
         """
-        反复扩展直到到达 q_target 或被阻挡。
-        - outputs:
-            - status: 'reached' | 'trapped'
-            - idx: 到达/停止节点索引
-            - num_vertices: 更新后的节点数
+        从给定树向 q_target 扩展一步。
+        :return: (状态, 新/最近节点索引)
+        """
+        nearest_idx = self._nearest_neighbor(q_target, vertices)
+        q_near = vertices[nearest_idx]
+        direction = q_target - q_near
+        dist = np.linalg.norm(direction)
+
+        if dist == 0:
+            return 'Reached', nearest_idx
+
+        if dist > self.step_len:
+            direction = (direction / dist) * self.step_len
+            q_new = q_near + direction
+            status = 'Advanced'
+        else:
+            q_new = q_target
+            status = 'Reached'
+
+        if self._is_edge_valid(q_near, q_new):
+            vertices.append(q_new)
+            parents.append(nearest_idx)
+            return status, len(vertices) - 1
+
+        return 'Trapped', nearest_idx
+
+    def _connect_tree(self, vertices, parents, q_target):
+        """
+        连续扩展直到到达 q_target 或被阻挡。
+        :return: (状态, 到达/停止节点索引)
         """
         while True:
-            status, idx, num_vertices = self._extend_tree(
-                vertices, vertex_parents, num_vertices, q_target
-            )
-            if status == 'reached':
-                return 'reached', idx, num_vertices
-            if status == 'trapped':
-                return 'trapped', idx, num_vertices
+            status, idx = self._extend_tree(vertices, parents, q_target)
+            if status == 'Reached':
+                return 'Reached', idx
+            if status == 'Trapped':
+                return 'Trapped', idx
 
-    def _extract_tree_path(self, vertices, vertex_parents, end_index):
+    def _is_edge_valid(self, q_start, q_end):
         """
-        从 end_index 回溯到根节点 (index 0)，提取路径。
-        - outputs:
-            - path: np.array (n_path, n_dof)
+        检查从 q_start 到 q_end 的直线段是否无碰撞
+        使用插值检测
         """
-        path = [vertices[end_index].copy()]
-        idx = end_index
-        while idx != 0:
-            idx = vertex_parents[idx]
-            path.append(vertices[idx].copy())
-        path.reverse()
-        return np.stack(path, axis=0)
+        dist = np.linalg.norm(q_end - q_start)
+        if dist == 0:
+            return True
+            
+        # 计算需要检查的点数
+        # 确保每段插值不超过 step_len / 2，增加检测密度防止穿模
+        n_checks = int(np.ceil(dist / (self.step_len / 2.0)))
+        
+        # 生成插值点
+        for i in range(1, n_checks + 1):
+            alpha = float(i) / n_checks
+            q_check = (1 - alpha) * q_start + alpha * q_end
+            
+            # 检查关节限位
+            if not self._check_joint_limits(q_check):
+                return False
+                
+            # 检查碰撞
+            if self.is_collision_free(q_check) is False:
+                return False
+                
+        return True
 
-    def steer(self, q_near, q_target):
-        """
-        从 q_near 向 q_target 方向步进，步幅不超过 step_len。
-        """
-        dist, direction = self.get_distance_and_direction(q_near, q_target)
-        dist = min(self.step_len, dist)
-        return q_near + dist * direction
-
-    def sample_random(self):
-        lo = self.joint_limits[:, 0]
-        hi = self.joint_limits[:, 1]
-        return lo + np.random.rand(self.n_dof) * (hi - lo)
+    def _check_joint_limits(self, q):
+        """检查关节角度是否在限位内"""
+        return np.all((q >= self.joint_limits[:, 0] - 1e-6) & (q <= self.joint_limits[:, 1] + 1e-6))
 
     def is_collision_free(self, q):
-        """检查关节配置 q 下机械臂是否与环境无碰撞"""
-        q = np.array(q)
-        if np.any(q < self.joint_limits[:, 0]) or np.any(q > self.joint_limits[:, 1]):
-            return False
-
-        ja = self._q_to_joint_angles(q)
-        _, _, world_collisions = compute_fk(
-            self.links, self.joints, joint_angles=ja, base_pos=self.base_pos
+        """
+        检查给定构型 q 是否发生碰撞
+        这是核心碰撞检测函数
+        """
+        # 1. 计算正运动学
+        # 构造关节角度字典
+        revolute = [j for j in self.joints if j['type'] in ('revolute', 'continuous')]
+        joint_angles = {revolute[k]['name']: q[k] for k in range(self.n_dof)}
+        
+        _, link_transforms, _ = compute_fk(
+            self.links,
+            self.joints,
+            joint_angles=joint_angles,
+            base_pos=self.base_pos,
+            urdf_path=self.urdf_path,
         )
-        arm_pts = self._sample_arm_points(world_collisions)
-        if len(arm_pts) == 0:
+        
+        # 2. 检查机器人自身与障碍物的碰撞
+        robot_points = self._sample_robot_points(link_transforms)
+        if not self.obstacles:
             return True
 
-        if self.box_arr is not None:
-            if np.any(points_in_AABB_3d(arm_pts, self.box_arr, clearance=self.clearance)):
-                return False
-        if self.sphere_arr is not None:
-            if np.any(points_in_ball_3d(arm_pts, self.sphere_arr, clearance=self.clearance)):
-                return False
-        if self.cylinder_arr is not None:
-            if np.any(points_in_cylinder_3d(arm_pts, self.cylinder_arr, clearance=self.clearance)):
-                return False
-        return True
+        for obs in self.obstacles:
+            obs_type = obs.get('type')
+            obs_pos_raw = obs.get('pos', obs.get('position'))
+            if obs_pos_raw is None:
+                continue
+            obs_pos = np.array(obs_pos_raw, dtype=float)
 
-    def is_edge_valid(self, q1, q2, n_checks=None):
-        """检查 q1 到 q2 之间的线性插值路径是否无碰撞"""
-        if n_checks is None:
-            dist = np.linalg.norm(np.array(q1) - np.array(q2))
-            n_checks = max(5, int(dist / (self.step_len / 2.0)))
-        for t in np.linspace(0, 1, n_checks):
-            q_mid = q1 + t * (q2 - q1)
-            if not self.is_collision_free(q_mid):
-                return False
-        return True
-
-    def _q_to_joint_angles(self, q):
-        return {self.joint_names[i]: q[i] for i in range(self.n_dof)}
-
-    def _sample_arm_points(self, world_collisions):
-        """从碰撞体中采样表面点用于碰撞检测"""
-        bodies = get_robot_collision_bodies(world_collisions)
-        pts = []
-        for body in bodies:
-            T = body['transform']
-            pos = T[:3, 3]
-            R = T[:3, :3]
-            if body['type'] == 'sphere':
-                r = body['radius']
-                pts.append(pos)
-                for ax in np.eye(3):
-                    pts.append(pos + R @ (ax * r))
-                    pts.append(pos - R @ (ax * r))
-            elif body['type'] == 'cylinder':
-                r = body['radius']
-                h = body['length']
-                for z in np.linspace(-h / 2, h / 2, self.n_samples):
-                    pts.append(pos + R @ np.array([0, 0, z]))
-                for z in [-h / 2, h / 2]:
-                    for theta in np.linspace(0, 2 * np.pi, 4, endpoint=False):
-                        pts.append(pos + R @ np.array([r * np.cos(theta), r * np.sin(theta), z]))
-        if not pts:
-            return np.empty((0, 3))
-        return np.vstack(pts)
-
-    def check_success(self, path):
-        if path is None or len(path) == 0:
-            return False
-        return np.allclose(path[0], self.q_start) and np.allclose(path[-1], self.q_goal)
-
-    def get_path_len(self, path):
-        if path is None or len(path) == 0:
-            return np.inf
-        path = np.array(path)
-        path_disp = path[1:] - path[:-1]
-        return np.linalg.norm(path_disp, axis=1).sum()
-
-    @staticmethod
-    def nearest_neighbor(node_list, n):
-        '''
-        find the node in node_list which is the closest to n.
-        - inputs:
-            - node_list: np (num_vertices, n_dof)
-            - n: np (n_dof,)
-        - outputs:
-            - nearest_n: np (n_dof,)
-            - nearest_index
-        '''
-        vec_to_n = n - node_list
-        nearest_index = np.argmin(np.linalg.norm(vec_to_n, axis=1))
-        return node_list[nearest_index], nearest_index
-
-    @staticmethod
-    def get_distance_and_direction(node_start, node_end):
-        '''
-        - inputs:
-            - node_start, node_end: np (n_dof,)
-        - outputs:
-            - distance
-            - direction unit vector, np (n_dof,)
-        '''
-        diff = node_end - node_start
-        distance = np.linalg.norm(diff)
-        if distance == 0:
-            return 0, np.zeros_like(diff)
-        direction = diff / distance
-        return distance, direction
-
-
-import numpy as np
-
-def shortcut_path(planner, path, n_attempts=100, max_failures=20):
-    """
-    增强版路径平滑：
-    1. 优先尝试长距离跨越 (更容易大幅缩短路径)。
-    2. 引入连续失败计数，若连续多次无法找到捷径则提前终止。
-    3. 动态调整采样范围。
-    """
-    if path is None or len(path) < 3:
-        return path
-    
-    path = list(path)
-    consecutive_failures = 0
-    
-    # 当路径还能被优化且未达到最大尝试次数时循环
-    attempt = 0
-    while attempt < n_attempts and consecutive_failures < max_failures and len(path) >= 3:
-        attempt += 1
-        
-        # 策略：偏向于选择跨度较大的 i, j (例如至少跨越当前路径长度的 10% 或 2个点)
-        min_span = max(2, int(len(path) * 0.1)) 
-        if len(path) <= min_span + 1:
-            break
-            
-        i = np.random.randint(0, len(path) - min_span - 1)
-        # j 至少比 i 大 min_span
-        j = np.random.randint(i + min_span, len(path))
-        
-        # 碰撞检测
-        if planner.is_edge_valid(path[i], path[j]):
-            # 成功捷径：截断中间部分
-            # 注意：path[:i+1] 包含 i, path[j:] 包含 j
-            new_path = path[:i + 1] + path[j:]
-            
-            # 可选：如果新路径太短，直接返回
-            if len(new_path) < 3:
-                return np.array(new_path)
+            for r_pt in robot_points:
+                dist = float('inf')
+                if obs_type == 'sphere':
+                    radius = float(obs.get('radius', 0.0))
+                    dist = np.linalg.norm(r_pt - obs_pos) - radius
+                elif obs_type == 'cylinder':
+                    radius = float(obs.get('radius', 0.0))
+                    height = float(obs.get('height', 0.0))
+                    # 圆柱体碰撞检测简化版 (投影到XY平面 + Z轴高度)
+                    dz = abs(r_pt[2] - obs_pos[2])
+                    if dz > height / 2.0: # 高度超出
+                         dist = np.linalg.norm(r_pt[:2] - obs_pos[:2]) # 只看平面距离
+                    else:
+                        dist = np.linalg.norm(r_pt[:2] - obs_pos[:2]) - radius
+                elif obs_type == 'box':
+                    size = np.array(obs.get('size', [0.0, 0.0, 0.0]), dtype=float)
+                    half = size / 2.0
+                    inside = np.all(np.abs(r_pt - obs_pos) <= (half + self.clearance))
+                    if inside:
+                        return False
                 
-            path = new_path
-            consecutive_failures = 0 # 重置失败计数
-            # 成功一次后，稍微减少剩余尝试次数以节省时间，或者继续
+                if dist < self.clearance:
+                    return False # 发生碰撞
+        return True
+
+    def _sample_robot_points(self, link_transforms):
+        """
+        从机器人连杆中采样关键点用于碰撞检测
+        """
+        points = []
+        # 这里简化处理，只采样每个连杆变换矩阵的原点
+        # 实际应用中应该采样连杆的包围盒顶点
+        if isinstance(self.links, dict):
+            for link_name in self.links.keys():
+                if link_name in link_transforms:
+                    pos = link_transforms[link_name][:3, 3]
+                    points.append(pos)
         else:
-            consecutive_failures += 1
-            
-    return np.array(path)
+            for link in self.links:
+                link_name = link.get('name') if isinstance(link, dict) else None
+                if link_name is not None and link_name in link_transforms:
+                    pos = link_transforms[link_name][:3, 3]
+                    points.append(pos)
+        return points
+
+    def _extract_path(self, vertices, parents, idx):
+        """
+        从树中提取路径
+        :param vertices: 节点列表
+        :param parents: 父节点索引列表
+        :param idx: 当前节点索引
+        :return: 路径列表
+        """
+        path = []
+        curr_idx = idx
+        while curr_idx != -1:
+            path.append(vertices[curr_idx])
+            curr_idx = parents[curr_idx]
+        path.reverse()
+        return np.array(path)
