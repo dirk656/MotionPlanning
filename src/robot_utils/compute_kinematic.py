@@ -3,74 +3,72 @@ import pinocchio as pin
 from robot_utils.urdf_to_geometry import parse_urdf
 from robot_utils.rotation_matrix import make_transform
 
-# 全局缓存，避免重复加载模型
-_pinocchio_instances = {}
 
+pinocchio_instances = {}  
 
-def _ensure_pinocchio_api():
-    """检查是否为机器人学 Pinocchio 绑定，而非同名的其他包。"""
-    if not hasattr(pin, "buildModelFromUrdf"):
-        raise RuntimeError(
-            "当前环境中的 pinocchio 缺少 buildModelFromUrdf。"
-            "你可能安装了错误的同名包，请安装机器人学 Pinocchio(Pin) 并确保导入的是该版本。"
-        )
 
 def get_pinocchio_instance(urdf_path, package_dirs=None):
     """单例模式获取 PinocchioKinematics 实例"""
-    _ensure_pinocchio_api()
-    if urdf_path not in _pinocchio_instances:
-        _pinocchio_instances[urdf_path] = PinocchioKinematics(urdf_path, package_dirs)
-    return _pinocchio_instances[urdf_path]
+    if urdf_path not in pinocchio_instances:
+        pinocchio_instances[urdf_path] = PinocchioKinematics(urdf_path, package_dirs)
+    return pinocchio_instances[urdf_path]
 
 class PinocchioKinematics:
     def __init__(self, urdf_path, package_dirs=None):
-        # 构建模型
-        if package_dirs is None:
-            self.model = pin.buildModelFromUrdf(urdf_path)
-        else:
-            self.model = pin.buildModelFromUrdf(urdf_path, package_dirs)
-        self.data = self.model.createData()
 
+        # 构建模型
+        self.model = pin.buildModel(urdf_path, package_dirs=package_dirs)
+        self.data = self.model.createData()
         # 解析 URDF 几何信息
         self.links, self.joints = parse_urdf(urdf_path)
 
-        # 筛选 1-DOF 关节 (revolute/continuous)
-        self.actuated_joint_names = []
-        self.q_indices = []
-        self.lower_limits = []
-        self.upper_limits = []
 
-        lower_all = np.asarray(self.model.lowerPositionLimit, dtype=float)
-        upper_all = np.asarray(self.model.upperPositionLimit, dtype=float)
+        # 筛选 1-DOF 关节 (revolute/continuous)
+        self.joint_names = [] #name
+        self.joint_q = [] #idx_q
+        self.l_limits = [] #lower limits
+        self.u_limits = [] #upper limits
+        lower_limits = np.asarray(self.model.lowerPositionLimit, dtype=float)
+        upper_limits = np.asarray(self.model.upperPositionLimit, dtype=float)
+
 
         for joint in self.model.joints[1:]:
-            if joint.nq != 1: continue
-            if joint.nv == 0: continue
-            jname = self.model.names[joint.id]
-            qidx = int(joint.idx_q)
+            #from joint 1  , skip base link
 
-            self.actuated_joint_names.append(jname)
-            self.q_indices.append(qidx)
+            if joint.n_q != 1: 
+                continue
+            if joint.n_v == 0: 
+                continue
 
-            lo = lower_all[qidx] if np.isfinite(lower_all[qidx]) else -np.pi
-            hi = upper_all[qidx] if np.isfinite(upper_all[qidx]) else np.pi
-            self.lower_limits.append(lo)
-            self.upper_limits.append(hi)
 
-        self.q_indices = np.asarray(self.q_indices, dtype=int)
-        self.lower_limits = np.asarray(self.lower_limits, dtype=float)
-        self.upper_limits = np.asarray(self.upper_limits, dtype=float)
+            j_name = self.model.names[joint.id]
+            q_idx= int(joint.idx_q)
+
+            self.joint_names.append(j_name)
+            self.joint_q.append(q_idx)
+
+            low_limits = lower_limits[q_idx] if np.isfinite(lower_limits[q_idx]) else -np.pi
+            high_limits = upper_limits[q_idx] if np.isfinite(upper_limits[q_idx]) else np.pi
+            self.l_limits.append(low_limits)
+            self.u_limits.append(high_limits)
+
+        self.joint_q = np.asarray(self.joint_q, dtype=int)
+        self.l_limits = np.asarray(self.l_limits, dtype=float)
+        self.u_limits = np.asarray(self.u_limits, dtype=float)
+
 
     @staticmethod
-    def _se3_to_matrix(se3_obj):
+    def se3_to_matrix(se3_obj) -> np.ndarray:
         T = np.eye(4)
         T[:3, :3] = se3_obj.rotation
         T[:3, 3] = se3_obj.translation
         return T
 
-    def _compose_q(self, joint_angles=None, q=None):
+    def compose_q(self, joint_angles=None, q=None):
         q_full = pin.neutral(self.model)
+
         if q is not None:
+
             q = np.asarray(q, dtype=float)
             if q.shape[0] == self.model.nq:
                 q_full[:] = q
@@ -80,8 +78,8 @@ class PinocchioKinematics:
                 raise ValueError("q 维度不匹配")
             return q_full
 
-        if joint_angles is None: return q_full
-        
+        if joint_angles is None: 
+            return q_full
         for name, angle in joint_angles.items():
             if self.model.existJointName(name):
                 jid = self.model.getJointId(name)
@@ -90,8 +88,11 @@ class PinocchioKinematics:
                     q_full[int(joint.idx_q)] = float(angle)
         return q_full
 
+
+
+
     def forward_kinematics(self, joint_angles=None, q=None, base_pos=(0.0, 0.0, 0.0)):
-        q_full = self._compose_q(joint_angles=joint_angles, q=q)
+        q_full = self.compose_q(joint_angles=joint_angles, q=q)
         pin.forwardKinematics(self.model, self.data, q_full)
         pin.updateFramePlacements(self.model, self.data)
 
@@ -102,7 +103,7 @@ class PinocchioKinematics:
         for link_name in self.links.keys():
             if self.model.existFrame(link_name):
                 frame_id = self.model.getFrameId(link_name)
-                T_link = self._se3_to_matrix(self.data.oMf[frame_id])
+                T_link = self.se3_to_matrix(self.data.oMf[frame_id])
                 link_transforms[link_name] = T_base @ T_link
 
         # 构造视觉和碰撞几何体（保持与旧代码兼容）
@@ -111,6 +112,8 @@ class PinocchioKinematics:
         # 这里简化处理，实际如需详细几何体需遍历 self.links
         
         return world_visuals, link_transforms, world_collisions
+
+
 
     def inverse_kinematics(self, target_pos, ee_link, base_pos=(0.0, 0.0, 0.0), 
                            q_init=None, max_iter=200, tol=1e-3, damping=1e-2, 

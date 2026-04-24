@@ -35,3 +35,6 @@ def parse_vec(s, default=(0, 0, 0)):
     if s is None:
         return np.array(default, dtype=float)
     return np.array([float(x) for x in s.split()], dtype=float)
+
+
+

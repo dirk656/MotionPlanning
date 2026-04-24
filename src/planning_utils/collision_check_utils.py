@@ -298,3 +298,13 @@ def check_collision_line_balls_boxes(line, obs_ball, obs_box, clearance=0, resol
     samples = start[np.newaxis, :] + t * (end - start)[np.newaxis, :]
     in_obs = points_in_balls_boxes(samples, obs_ball, obs_box, clearance=clearance)
     return bool(np.any(in_obs))
+
+
+
+
+
+
+
+
+
+
