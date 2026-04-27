@@ -1,9 +1,12 @@
 import math
 
 import numpy as np
-import open3d as o3d
+try:
+    import open3d as o3d
+except ImportError:
+    o3d = None
 
-from planning_utils.collision_check_utils import points_in_range
+from src.planning_utils.collision_check_utils import points_in_range
 
 def get_binary_mask(env_img):
     """
@@ -15,6 +18,21 @@ def get_binary_mask(env_img):
     binary_mask = np.zeros(env_dims).astype(float)
     binary_mask[env_img[:,:,0]!=0]=1
     return binary_mask
+
+
+def _downsample_points_with_optional_open3d(points, n_points):
+    if points.shape[0] <= n_points:
+        return points
+
+    if o3d is None:
+        idx = np.random.choice(points.shape[0], size=n_points, replace=False)
+        return points[idx]
+
+    point_cloud_fake_z = np.concatenate([points, np.zeros((points.shape[0], 1))], axis=1)
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(point_cloud_fake_z)
+    pcd = pcd.farthest_point_down_sample(num_samples=n_points)
+    return np.asarray(pcd.points)[:, :2]
 
 
 def get_point_cloud_mask_around_points(
@@ -65,11 +83,7 @@ def generate_rectangle_point_cloud(
     ) # (n,)
     point_cloud = point_cloud[point_cloud_occupied_mask.nonzero()[0]]
     # downsample
-    point_cloud_fake_z = np.concatenate([point_cloud, np.zeros((point_cloud.shape[0],1))],axis=1) # (n,3)
-    pcd = o3d.geometry.PointCloud()
-    pcd.points = o3d.utility.Vector3dVector(point_cloud_fake_z)
-    pcd = pcd.farthest_point_down_sample(num_samples=n_points)
-    point_cloud = np.asarray(pcd.points)[:,:2]
+    point_cloud = _downsample_points_with_optional_open3d(point_cloud, n_points)
     return point_cloud
 
 
@@ -166,9 +180,5 @@ def ellipsoid_point_cloud_sampling(
     point_cloud = point_cloud[point_cloud_in_range_mask]
     if len(point_cloud) > n_points:
         # downsample
-        point_cloud_fake_z = np.concatenate([point_cloud, np.zeros((point_cloud.shape[0],1))],axis=1) # (n,3)
-        pcd = o3d.geometry.PointCloud()
-        pcd.points = o3d.utility.Vector3dVector(point_cloud_fake_z)
-        pcd = pcd.farthest_point_down_sample(num_samples=n_points)
-        point_cloud = np.asarray(pcd.points)[:,:2]
+        point_cloud = _downsample_points_with_optional_open3d(point_cloud, n_points)
     return point_cloud

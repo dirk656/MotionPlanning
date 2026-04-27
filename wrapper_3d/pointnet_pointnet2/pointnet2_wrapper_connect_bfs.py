@@ -1,4 +1,5 @@
 from os.path import join
+import os
 
 import torch
 import numpy as np
@@ -6,8 +7,8 @@ import matplotlib.pyplot as plt
 
 from pointnet_pointnet2.models.pointnet2 import get_model
 from pointnet_pointnet2.models.pointnet2_utils import pc_normalize
-from datasets.point_cloud_mask_utils import get_point_cloud_mask_around_points
-from wrapper.utils.bfs_connect_heuristic import get_boundary_mask, bfs_point_cloud_visualization, select_heuristic_boundary_point
+from src.generate_datasets_utils.point_cloud_mask_utils import get_point_cloud_mask_around_points
+from wrapper_3d.utils.bfs_connect_heuristic import get_boundary_mask, bfs_point_cloud_visualization, select_heuristic_boundary_point
 
 
 class PNGWrapper:
@@ -22,12 +23,52 @@ class PNGWrapper:
             - num_classes: default 2, for path and not path.
         """
         self.model = get_model(num_classes).to(device)
-        model_filepath = join(root_dir, 'results/model_training/pointnet2_3d/checkpoints/best_pointnet2_3d.pth')
-        checkpoint = torch.load(model_filepath, map_location=torch.device(device))
-        self.model.load_state_dict(checkpoint['model_state_dict'])
+        model_filepath = self._resolve_model_filepath(root_dir)
+        checkpoint = self._load_checkpoint_compat(model_filepath, device)
+        if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
+            state_dict = checkpoint["model_state_dict"]
+        else:
+            state_dict = checkpoint
+        self.model.load_state_dict(state_dict)
         self.model = self.model.eval()
         self.device = device
         print("PointNet++ wrapper 3d is initialized. Using BFS for Neural Connect.")
+
+    @staticmethod
+    def _load_checkpoint_compat(model_filepath, device):
+        # PyTorch 2.6 changed torch.load default to weights_only=True.
+        # For trusted local checkpoints, we explicitly disable weights-only mode.
+        try:
+            return torch.load(
+                model_filepath,
+                map_location=torch.device(device),
+                weights_only=False,
+            )
+        except TypeError:
+            # Older torch versions do not support weights_only argument.
+            return torch.load(model_filepath, map_location=torch.device(device))
+
+    @staticmethod
+    def _resolve_model_filepath(root_dir):
+        candidates = []
+        root_dir = os.path.normpath(root_dir)
+
+        # Case 1: root_dir already points to checkpoint stem (without .pth)
+        candidates.append(root_dir + ".pth")
+
+        # Case 2: root_dir points to checkpoint folder
+        candidates.append(join(root_dir, "best_pointnet2_3d.pth"))
+
+        # Case 3: root_dir is project root
+        candidates.append(join(root_dir, "results", "model_training", "pointnet2_3d", "checkpoints", "best_pointnet2_3d.pth"))
+
+        for fp in candidates:
+            if os.path.exists(fp):
+                return fp
+
+        raise FileNotFoundError(
+            "Cannot find model checkpoint. Tried: " + "; ".join(candidates)
+        )
     
     def classify_path_points(
         self,
