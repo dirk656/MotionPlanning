@@ -290,13 +290,28 @@ def main():
     )
 
     # 5. Define Start, Goal, Control Loop
-    start_pos, goal_pos = sample_reachable_start_goal(
-        robotId,
-        end_effector_idx,
-        joints_indices,
-    )
+    use_fixed_start_goal = True
+    fixed_start_pos = np.array([0.56, 0.16, 0.44], dtype=np.float64)
+    fixed_goal_pos = np.array([0.40, -0.40, 0.72], dtype=np.float64)
 
-    # Dynamic obstacle moves within a tube around start-goal segment.
+    if use_fixed_start_goal:
+        start_pos = fixed_start_pos
+        goal_pos = fixed_goal_pos
+
+        q_s = solve_ik_continuous(robotId, end_effector_idx, start_pos, None, joints_indices)
+        q_g = solve_ik_continuous(robotId, end_effector_idx, goal_pos, None, joints_indices)
+        if q_s is None or q_g is None:
+            raise RuntimeError(
+                "Fixed start/goal are not IK-reachable. Please adjust fixed_start_pos/fixed_goal_pos."
+            )
+    else:
+        start_pos, goal_pos = sample_reachable_start_goal(
+            robotId,
+            end_effector_idx,
+            joints_indices,
+        )
+
+    # Obstacle moves in a tube around the start-goal segment.
     obstacle_center_fn = build_tube_motion(
         start_pos,
         goal_pos,
