@@ -1,0 +1,124 @@
+experiment:
+	seed: 42
+	output_root: results/experiments
+	name_prefix: exp
+	max_wall_time_s: 120.0
+	save_code_snapshot: true
+	save_video: true
+	video_filename: sim.mp4
+	use_heuristic: true
+	ablation_group: full
+	use_fixed_start_goal: true
+	fixed_start_pos: [0.56, 0.16, 0.44]
+	fixed_goal_pos: [0.40, -0.40, 0.72]
+
+logging:
+	level: INFO
+	to_file: true
+
+env:
+	pybullet_mode: GUI
+	gravity: [0.0, 0.0, -9.81]
+	env_config_path: src/config/env.yaml
+	urdf:
+		plane: plane.urdf
+		robot: franka_panda/panda.urdf
+	robot:
+		end_effector_idx: 11
+		controlled_joint_indices: [0, 1, 2, 3, 4, 5, 6]
+	camera:
+		width: 320
+		height: 240
+		fov: 60.0
+		near: 0.05
+		far: 3.0
+		target: [0.25, 0.0, 0.25]
+		distance: 1.3
+		yaw: 45.0
+		pitch: -35.0
+		roll: 0.0
+		up_axis: 2
+
+pointcloud:
+	refresh_interval: 0.15
+	voxel_size: 0.03
+	max_voxels: 1200
+
+planning:
+	planner:
+		speed: 0.5
+		step_len: 0.035
+		goal_tolerance: 0.05
+		goal_bias: 0.25
+		heuristic_bias: 0.55
+		max_subtrees: 4
+		subtree_spawn_prob: 0.12
+		subtree_merge_distance: 0.12
+		risk_lookahead_s: 0.35
+		risk_samples: 3
+		risk_clearance_scale: 1.0
+		singularity_threshold: null
+		singularity_penalty_gain: 2.0
+		failed_region_radius: 0.10
+		failed_region_spawn_threshold: 3
+		max_iters: 260
+		time_horizon: 10.0
+		collision_margin: 0.05
+	manager:
+		neighbor_radius: 0.1
+		max_trial_attempts: 3
+		incremental_iter_budget: 80
+		tree_resume_pos_tol: 0.08
+		tree_resume_time_window: 0.35
+		heuristic_update_interval: 0.15
+		bias_decay: 0.85
+		bias_recover: 0.05
+		bias_decay_fail_threshold: 3
+		min_heuristic_bias: 0.05
+		path_smoothing_enabled: true
+		path_smoothing_trials: 20
+		stuck_time_s: 10.0
+		stuck_goal_improve_eps: 0.01
+	async:
+		iter_budget: 80
+		visualize: false
+
+control:
+	sim_hz: 240.0
+	replan_min_interval: 0.015
+	periodic_online_replan_interval: 0.2
+	waypoint_reach_tol: 0.03
+	waypoint_stall_timeout: 0.7
+	max_ik_fail_streak: 25
+	ee_step: 0.012
+	init:
+		max_steps: 1200
+		reach_tol: 0.03
+		max_step_rad: 0.02
+	joint_limits:
+		max_step_rad: 0.012
+		position_gain: 0.08
+		velocity_gain: 0.6
+		hold_position_gain: 0.06
+		hold_velocity_gain: 0.5
+
+obstacle:
+	radius: 0.09
+	color_rgba: [1.0, 0.0, 0.0, 1.0]
+	tube_radius: 0.07
+	endpoint_clearance: 0.18
+
+model:
+	predictor_model_root: results/model_training/pointnet2_3d/checkpoints/best_pointnet2_3d
+	env_config_path: src/config/env.yaml
+	device: cpu
+	max_predict_points: 4096
+
+visualization:
+	show_path: true
+	path_color: [0.0, 0.9, 1.0]
+	path_line_width: 2.5
+	show_heuristic_points: true
+	heuristic_color: [0.2, 1.0, 0.2]
+	heuristic_point_size: 4.0
+	marker_radius: 0.03
