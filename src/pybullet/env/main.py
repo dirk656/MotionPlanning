@@ -35,6 +35,7 @@ from src.pybullet.env.path_planner import (
     start_planning_bundle,
     stop_planning_bundle,
 )
+from robot_utils.benchmark_framework import BenchmarkRunner, Scenario, build_default_scenarios, build_planner
 
 
 from src.pybullet.env.path_tools import generate_pos
@@ -99,6 +100,7 @@ def setup_experiment_folder(cfg: Dict, args):
     exp_dir = root / exp_name
     exp_dir.mkdir(parents=True, exist_ok=False)
     return exp_dir
+
 
 
 def setup_logger(exp_dir: Path, cfg: Dict):
@@ -229,6 +231,218 @@ def save_result_json(exp_dir: Path, result: Dict):
         json.dump(result, f, indent=2, ensure_ascii=False)
 
 
+def resolve_planner_name(exp_cfg: Dict, bench_cfg: Dict):
+    planner = None if bench_cfg is None else bench_cfg.get("planner")
+    if planner is None:
+        planner = exp_cfg.get("planner")
+    if planner is not None:
+        return str(planner).lower()
+    return "heuristic" if bool(exp_cfg.get("use_heuristic", True)) else "rrt"
+
+
+def resolve_start_goal(exp_cfg: Dict, sim_env: PyBulletMotionEnv):
+    if bool(exp_cfg.get("use_fixed_start_goal", True)):
+        start_pos = np.asarray(exp_cfg.get("fixed_start_pos", [0.56, 0.16, 0.44]), dtype=np.float64)
+        goal_pos = np.asarray(exp_cfg.get("fixed_goal_pos", [0.4, -0.4, 0.72]), dtype=np.float64)
+        q_s = sim_env.solve_ik_continuous(start_pos, None)
+        q_g = sim_env.solve_ik_continuous(goal_pos, None)
+        if q_s is None or q_g is None:
+            raise RuntimeError("Fixed start/goal are not IK-reachable. Adjust config fixed_start_pos/fixed_goal_pos.")
+        return start_pos, goal_pos
+
+    return sample_reachable_start_goal(
+        ik_solver=sim_env.solve_ik_continuous,
+        get_ee_position=sim_env.get_end_effector_pos,
+        reset_joint_positions=sim_env.reset_joint_positions,
+        get_joint_positions=sim_env.get_joint_positions,
+        generate_pos_fn=generate_pos,
+        max_tries=60,
+    )
+
+
+def run_benchmark_mode(cfg: Dict, exp_cfg: Dict, env_cfg: Dict, obstacle_cfg: Dict, bounds_min, bounds_max, seed: int, logger, sim_env: PyBulletMotionEnv):
+    bench_cfg = cfg.get("benchmark", {})
+    planner_name = resolve_planner_name(exp_cfg, bench_cfg)
+    rng = np.random.default_rng(seed)
+
+    sim_env.connect()
+    try:
+        start_pos, goal_pos = resolve_start_goal(exp_cfg, sim_env)
+    finally:
+        sim_env.disconnect()
+
+    obstacle_radius = float(obstacle_cfg.get("radius", 0.09))
+    obstacle_center_fn = build_tube_motion(
+        start_pos=start_pos,
+        goal_pos=goal_pos,
+        tube_radius=float(obstacle_cfg.get("tube_radius", 0.07)),
+        endpoint_clearance=float(obstacle_cfg.get("endpoint_clearance", 0.18)),
+    )
+
+    def dynamic_obstacle_fn(t_abs):
+        center = np.clip(obstacle_center_fn(t_abs), bounds_min, bounds_max)
+        return [SphereObstacle(center=np.asarray(center, dtype=np.float64), radius=obstacle_radius)]
+
+    planner_cfg = cfg.get("planning", {}).get("planner", {})
+    scenario_mode = str(bench_cfg.get("scenario_mode", "multi")).lower()
+    if scenario_mode == "single":
+        scenarios = [
+            Scenario(
+                start=start_pos,
+                goal=goal_pos,
+                static_obs=None,
+                dynamic_fn=dynamic_obstacle_fn,
+                point_cloud=None,
+                name=str(bench_cfg.get("scenario_name", "default")),
+                speed=float(planner_cfg.get("speed", 1.0)),
+                static_obs_format=str(bench_cfg.get("static_obs_format", "min_size")),
+                goal_tolerance=float(bench_cfg.get("goal_tolerance", 0.05)),
+                sim_dt=float(bench_cfg.get("sim_dt", 0.1)),
+                max_sim_time=float(bench_cfg.get("max_sim_time", 12.0)),
+            )
+        ]
+    else:
+        scenario_cfg = {
+            "scenario_types": bench_cfg.get("scenario_types"),
+            "num_variants": bench_cfg.get("num_variants", 1),
+            "obstacle_counts": bench_cfg.get("obstacle_counts"),
+            "obstacle_size_range": bench_cfg.get("obstacle_size_range", [0.05, 0.12]),
+            "obstacle_clearance": bench_cfg.get("obstacle_clearance", 0.08),
+            "dynamic_speed": bench_cfg.get("dynamic_speed"),
+            "dynamic_radius": bench_cfg.get("dynamic_radius", 0.08),
+            "static_obs_format": bench_cfg.get("static_obs_format", "min_size"),
+            "speed": float(planner_cfg.get("speed", 1.0)),
+            "goal_tolerance": bench_cfg.get("goal_tolerance", 0.05),
+            "sim_dt": bench_cfg.get("sim_dt", 0.1),
+            "max_sim_time": bench_cfg.get("max_sim_time", 12.0),
+        }
+        scenarios = build_default_scenarios(
+            bounds_min=bounds_min,
+            bounds_max=bounds_max,
+            start=start_pos,
+            goal=goal_pos,
+            config=scenario_cfg,
+            rng=rng,
+        )
+
+    planner_names = bench_cfg.get("planners")
+    if planner_names is None:
+        planner_names = [planner_name]
+    elif isinstance(planner_names, str):
+        planner_names = [planner_names]
+
+    use_heuristic_flag = bench_cfg.get("use_heuristic")
+    if use_heuristic_flag is None:
+        use_heuristic_flag = bool(exp_cfg.get("use_heuristic", True))
+    use_subtree_flag = bool(bench_cfg.get("use_subtree", True))
+    use_risk_flag = bool(bench_cfg.get("use_risk", True))
+
+    def build_planners_for_flags(flag_use_heuristic, flag_use_subtree, flag_use_risk, planner_list):
+        planners_local = {}
+        bundles_local = []
+        for local_name in planner_list:
+            local_name = str(local_name).lower()
+            planner_config = {
+                "planner": local_name,
+                "bounds_min": bounds_min,
+                "bounds_max": bounds_max,
+            }
+            if local_name == "heuristic":
+                predictor = create_predictor(
+                    config=cfg,
+                    use_heuristic=bool(exp_cfg.get("use_heuristic", True)),
+                    rng_seed=seed + 17,
+                    logger=logger,
+                )
+                bundle = create_planning_bundle(
+                    config=cfg,
+                    bounds_min=bounds_min,
+                    bounds_max=bounds_max,
+                    dynamic_obstacle_fn=dynamic_obstacle_fn,
+                    predictor=predictor,
+                    rng=rng,
+                )
+                planner_config["manager"] = bundle.planning_manager
+                planner_config["use_heuristic"] = bool(flag_use_heuristic)
+                planner_config["use_subtree"] = bool(flag_use_subtree)
+                planner_config["use_risk"] = bool(flag_use_risk)
+                bundles_local.append(bundle)
+            elif local_name in ("rrtstar", "rrt_star"):
+                planner_config["rrtstar"] = bench_cfg.get("rrtstar", {})
+            elif local_name in ("informed_rrtstar", "informed_rrt_star"):
+                planner_config["informed_rrtstar"] = bench_cfg.get("informed_rrtstar", {})
+            else:
+                planner_config["rrt"] = bench_cfg.get("rrt", {})
+
+            planners_local[local_name] = build_planner(planner_config)
+        return planners_local, bundles_local
+
+    planners, planning_bundles = build_planners_for_flags(
+        use_heuristic_flag,
+        use_subtree_flag,
+        use_risk_flag,
+        planner_names,
+    )
+
+    runner = BenchmarkRunner(
+        planners=planners,
+        scenarios=scenarios,
+        num_runs=int(bench_cfg.get("num_runs", 1)),
+        seed_offset=int(bench_cfg.get("seed_offset", 0)),
+        online_mode=bool(bench_cfg.get("online_mode", False)),
+        time_bins=bench_cfg.get("time_bins"),
+    )
+    bench_result = runner.run()
+
+    for bundle in planning_bundles:
+        stop_planning_bundle(bundle)
+
+    ablation_result = None
+    auto_ablation = bool(bench_cfg.get("auto_ablation", False))
+    ablation_groups = bench_cfg.get("ablation_groups")
+    if auto_ablation or ablation_groups:
+        if ablation_groups is None:
+            ablation_groups = {
+                "full": {"use_heuristic": True, "use_subtree": True, "use_risk": True},
+                "no_heuristic": {"use_heuristic": False, "use_subtree": True, "use_risk": True},
+                "no_subtree": {"use_heuristic": True, "use_subtree": False, "use_risk": True},
+                "no_risk": {"use_heuristic": True, "use_subtree": True, "use_risk": False},
+            }
+        ablation_planners = bench_cfg.get("ablation_planners", ["heuristic"])
+        if isinstance(ablation_planners, str):
+            ablation_planners = [ablation_planners]
+
+        ablation_result = {}
+        for group_name, flags in ablation_groups.items():
+            group_planners, group_bundles = build_planners_for_flags(
+                flags.get("use_heuristic", True),
+                flags.get("use_subtree", True),
+                flags.get("use_risk", True),
+                ablation_planners,
+            )
+            group_runner = BenchmarkRunner(
+                planners=group_planners,
+                scenarios=scenarios,
+                num_runs=int(bench_cfg.get("num_runs", 1)),
+                seed_offset=int(bench_cfg.get("seed_offset", 0)),
+                online_mode=bool(bench_cfg.get("online_mode", False)),
+                time_bins=bench_cfg.get("time_bins"),
+            )
+            ablation_result[str(group_name)] = group_runner.run()
+            for bundle in group_bundles:
+                stop_planning_bundle(bundle)
+
+    return {
+        "success": True,
+        "reason": "benchmark_complete",
+        "planner": planner_names if len(planner_names) != 1 else planner_names[0],
+        "start_pos": start_pos.tolist(),
+        "goal_pos": goal_pos.tolist(),
+        "benchmark": bench_result,
+        "ablation": ablation_result,
+    }
+
+
 def main():
     args = parse_args()
     cfg = load_yaml(args.config)
@@ -254,13 +468,21 @@ def main():
     vis_cfg = cfg.get("visualization", {})
     obstacle_cfg = cfg.get("obstacle", {})
     pointcloud_cfg = cfg.get("pointcloud", {})
+    bench_cfg = cfg.get("benchmark", {})
 
     seed = int(exp_cfg.get("seed", 42))
     set_global_seed(seed)
     rng = np.random.default_rng(seed)
 
+    run_mode = str(exp_cfg.get("run_mode", "sim")).lower()
+    planner_name = resolve_planner_name(exp_cfg, bench_cfg)
+    if exp_cfg.get("planner") is not None:
+        exp_cfg["use_heuristic"] = planner_name == "heuristic"
+
     logger.info("Experiment folder: %s", exp_dir)
     logger.info("Seed: %d", seed)
+    logger.info("Run mode: %s", run_mode)
+    logger.info("Planner: %s", planner_name)
     logger.info("Heuristic enabled: %s", bool(exp_cfg.get("use_heuristic", True)))
     logger.info("Ablation group: %s", str(exp_cfg.get("ablation_group", "full")))
 
@@ -277,12 +499,30 @@ def main():
         "reason": "unknown",
         "experiment_dir": str(exp_dir),
         "seed": seed,
+        "run_mode": run_mode,
+        "planner": planner_name,
         "use_heuristic": bool(exp_cfg.get("use_heuristic", True)),
         "ablation_group": str(exp_cfg.get("ablation_group", "full")),
         "error": None,
     }
 
     try:
+        if run_mode == "benchmark":
+            result.update(
+                run_benchmark_mode(
+                    cfg=cfg,
+                    exp_cfg=exp_cfg,
+                    env_cfg=env_cfg,
+                    obstacle_cfg=obstacle_cfg,
+                    bounds_min=bounds_min,
+                    bounds_max=bounds_max,
+                    seed=seed,
+                    logger=logger,
+                    sim_env=sim_env,
+                )
+            )
+            return
+
         client_id = sim_env.connect()
         proj_matrix = sim_env.compute_projection_matrix()
 
@@ -312,22 +552,7 @@ def main():
         )
         start_planning_bundle(planning_bundle)
 
-        if bool(exp_cfg.get("use_fixed_start_goal", True)):
-            start_pos = np.asarray(exp_cfg.get("fixed_start_pos", [0.56, 0.16, 0.44]), dtype=np.float64)
-            goal_pos = np.asarray(exp_cfg.get("fixed_goal_pos", [0.4, -0.4, 0.72]), dtype=np.float64)
-            q_s = sim_env.solve_ik_continuous(start_pos, None)
-            q_g = sim_env.solve_ik_continuous(goal_pos, None)
-            if q_s is None or q_g is None:
-                raise RuntimeError("Fixed start/goal are not IK-reachable. Adjust config fixed_start_pos/fixed_goal_pos.")
-        else:
-            start_pos, goal_pos = sample_reachable_start_goal(
-                ik_solver=sim_env.solve_ik_continuous,
-                get_ee_position=sim_env.get_end_effector_pos,
-                reset_joint_positions=sim_env.reset_joint_positions,
-                get_joint_positions=sim_env.get_joint_positions,
-                generate_pos_fn=generate_pos,
-                max_tries=60,
-            )
+        start_pos, goal_pos = resolve_start_goal(exp_cfg, sim_env)
 
         obstacle_center_fn = build_tube_motion(
             start_pos=start_pos,
